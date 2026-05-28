@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Differentiator from '../components/Differentiator.astro';
+import FeatureCards from '../components/FeatureCards.astro';
+import WhoItsFor from '../components/WhoItsFor.astro';
+import Pricing from '../components/Pricing.astro';
+import FAQ from '../components/FAQ.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Casebound — track what you read, catalog what you own"
+  description="A book tracker built for serious readers and library builders. Real reading data, a real catalog. Coming to iOS and Android."
+  canonicalUrl="https://casebound.co/"
+>
+  <main>
+    <Hero />
+    <Differentiator />
+    <FeatureCards />
+    <WhoItsFor />
+    <Pricing />
+    <FAQ />
+  </main>
+  <Footer />
+</BaseLayout>

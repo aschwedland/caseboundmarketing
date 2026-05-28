@@ -1,0 +1,66 @@
+---
+const freeTier = [
+  'Unlimited library',
+  'Basic session tracking',
+  'Up to 5 lists',
+  'Basic stats (week, month, year)',
+  'ISBN scan',
+  'Privacy toggle',
+  'Single device',
+];
+
+const proTier = [
+  'Everything in Free, plus:',
+  'Unlimited lists',
+  'Advanced stats and insights',
+  'Year-in-review wraps',
+  'Custom dashboard and filters',
+  'Cloud sync across devices',
+  'Data export',
+  'Themes',
+];
+---
+
+<section class="bg-casebound-paper px-6 py-16 sm:py-24">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-10 leading-snug">
+      Free is useful; paid is power
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+      <!-- Free card -->
+      <div class="border border-casebound-border rounded-xl p-6 sm:p-8 bg-casebound-wallpaper">
+        <h3 class="font-serif font-medium text-xl mb-1">Free</h3>
+        <p class="text-casebound-muted text-sm mb-6">No credit card needed</p>
+        <ul class="space-y-2.5 text-[15px] sm:text-base">
+          {freeTier.map((item) => (
+            <li class="flex gap-3">
+              <span class="text-casebound-green shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Pro card -->
+      <div class="border-2 border-casebound-gold/40 rounded-xl p-6 sm:p-8 bg-casebound-dark-green text-casebound-paper">
+        <h3 class="font-serif font-medium text-xl mb-1">Pro</h3>
+        <p class="text-sm opacity-80 mb-6">
+          <span class="font-medium">$4.99/month</span> or <span class="font-medium">$29.99/year</span>
+        </p>
+        <ul class="space-y-2.5 text-[15px] sm:text-base">
+          {proTier.map((item, i) => (
+            <li class={`flex gap-3 ${i === 0 ? 'text-sm opacity-80 mb-1' : ''}`}>
+              {i > 0 && <span class="text-casebound-gold shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>}
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <p class="text-casebound-muted text-[15px] sm:text-base leading-relaxed">
+      Free is genuinely useful &mdash; your full library, real session tracking, ISBN scan. Pro unlocks depth, devices, and exports.
+    </p>
+  </div>
+</section>

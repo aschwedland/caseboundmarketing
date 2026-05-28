@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-labelledby="casebound-title casebound-desc">
+  <title id="casebound-title">Casebound</title>
+  <desc id="casebound-desc">Casebound app icon master. A hardcover book spine — head and foot bands in dark green, cloth field in deep green, gold foil-stamped serif C centered on the title field.</desc>
+  <rect width="1024" height="1024" fill="#2E5D45"/>
+  <rect width="1024" height="180" fill="#1E4231"/>
+  <rect y="900" width="1024" height="124" fill="#1E4231"/>
+  <text x="512" y="780" font-family="Lora, Georgia, 'Times New Roman', serif" font-size="580" font-weight="500" text-anchor="middle" fill="#C8954B">C</text>
+</svg>

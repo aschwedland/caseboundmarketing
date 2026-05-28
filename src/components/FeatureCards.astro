@@ -1,0 +1,33 @@
+---
+const features = [
+  {
+    title: 'One book, every format',
+    body: 'Own the hardcover, listened to the audiobook, halfway through the Kindle? One library entry, three format records, each tracked separately. Stats stay honest \u2014 hours for audio, pages for physical, locations or percent for ebooks. No lossy conversion.',
+  },
+  {
+    title: 'Sessions that count',
+    body: 'Track reading time and pages session by session. Pause, resume, log a session you forgot to start. See weekly, monthly, yearly, and lifetime stats \u2014 measured in pages and time, not book counts.',
+  },
+  {
+    title: 'A real catalog of what you own',
+    body: 'Ownership is a per-format field. Status, format, ownership, privacy \u2014 all first-class. Search and filter by any of them. ISBN scan to add quickly. Correct a wrong page count once and you\u2019ve improved the record for everyone.',
+  },
+];
+---
+
+<section class="bg-casebound-paper px-6 py-16 sm:py-24">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {features.map((feature) => (
+        <article class="bg-casebound-wallpaper border border-casebound-border rounded-xl p-6 sm:p-8">
+          <h3 class="font-serif font-medium text-xl sm:text-[22px] mb-3 leading-snug">
+            {feature.title}
+          </h3>
+          <p class="text-[15px] sm:text-base leading-relaxed text-casebound-text">
+            {feature.body}
+          </p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+---
+import ProseLayout from '../layouts/ProseLayout.astro';
+---
+
+<ProseLayout
+  title="Page not found — Casebound"
+  description="The page you're looking for doesn't exist."
+  canonicalUrl="https://casebound.co/404"
+>
+  <h1 class="font-serif font-medium text-3xl sm:text-4xl mb-4">Page not found</h1>
+  <p class="text-casebound-muted text-lg mb-8">
+    Sorry, the page you're looking for doesn't exist or has been moved.
+  </p>
+  <a
+    href="/"
+    class="inline-block bg-casebound-green text-casebound-paper px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
+  >
+    Back to home
+  </a>
+</ProseLayout>

@@ -1,0 +1,42 @@
+---
+const faqs = [
+  {
+    q: 'Why not just use Goodreads?',
+    a: 'Goodreads conflates shelves with reading state and user lists. When you own 500 books across overlapping shelves, you can\'t cleanly answer "what do I own?" Casebound treats your library as a canonical catalog and lists as tags layered on top. They\'re separate things, and they look that way.',
+  },
+  {
+    q: 'Is my reading data private by default?',
+    a: 'Yes. Per-book privacy toggle, no public profile by default, no social feed. You decide what \u2014 if anything \u2014 is visible.',
+  },
+  {
+    q: 'Will there be social features?',
+    a: 'Possibly. Light friend-library viewing and shared lists are on the roadmap for a later version. Casebound will never be primarily a social product.',
+  },
+  {
+    q: 'Will there be a web app?',
+    a: 'Mobile first. Web comes later if it\u2019s clearly needed.',
+  },
+];
+---
+
+<section class="bg-casebound-wallpaper px-6 py-16 sm:py-24">
+  <div class="max-w-2xl mx-auto">
+    <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-10 leading-snug">
+      Frequently asked questions
+    </h2>
+
+    <div class="space-y-4">
+      {faqs.map((faq) => (
+        <details class="group border border-casebound-border rounded-lg bg-casebound-paper">
+          <summary class="cursor-pointer px-6 py-4 font-medium text-base sm:text-[17px] flex items-center justify-between gap-4 list-none [&::-webkit-details-marker]:hidden">
+            <span>{faq.q}</span>
+            <span class="shrink-0 text-casebound-muted transition-transform group-open:rotate-45 text-xl leading-none" aria-hidden="true">+</span>
+          </summary>
+          <div class="px-6 pb-5 text-[15px] sm:text-base leading-relaxed text-casebound-muted">
+            {faq.a}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

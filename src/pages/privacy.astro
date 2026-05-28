@@ -1,0 +1,110 @@
+---
+import ProseLayout from '../layouts/ProseLayout.astro';
+---
+
+<ProseLayout
+  title="Privacy policy — Casebound"
+  description="Casebound privacy policy. What we collect, how we use it, and the choices you have."
+  canonicalUrl="https://casebound.co/privacy"
+>
+  <h1 class="font-serif font-medium text-3xl sm:text-4xl mb-2">Privacy policy</h1>
+  <p class="text-casebound-muted text-sm mb-8"><em>Last updated: May 28, 2026.</em></p>
+
+  <blockquote class="border-l-4 border-casebound-gold pl-4 text-casebound-muted text-[15px] mb-8 italic">
+    This policy is in interim form pending review by counsel. It will be updated before public launch.
+  </blockquote>
+
+  <p class="mb-6">
+    Casebound is built by Pixel Master Technologies LLC ("we," "us," "our"). This policy explains what information we collect, how we use it, and the choices you have. We've tried to write it in plain language. If anything's unclear, email us at <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">What we collect</h2>
+
+  <p class="mb-4">
+    <strong>Account information.</strong> When you create a Casebound account, we collect your email address and a hashed password. If you sign in with Apple or Google, we receive the email associated with that account and an opaque identifier &mdash; we never see your Apple or Google password.
+  </p>
+
+  <p class="mb-4">
+    <strong>Books in your library.</strong> The books you add, their reading status, your ownership and format records, your reading sessions, your notes, your lists. This is the data that makes Casebound work for you.
+  </p>
+
+  <p class="mb-4">
+    <strong>Book metadata.</strong> When you scan an ISBN or search for a book, we look up its metadata (title, author, page count, cover image) from public sources (Open Library, Google Books, Hardcover). If you correct a wrong record, the correction improves the shared metadata cache for all users.
+  </p>
+
+  <p class="mb-4">
+    <strong>Technical information.</strong> Device type, OS version, app version, and basic crash diagnostics, collected via Sentry. When and if we add product analytics (planned via PostHog), it will be limited to aggregate usage patterns &mdash; never personal content. We will update this policy before adding analytics.
+  </p>
+
+  <p class="mb-6">
+    <strong>Payment information.</strong> If you subscribe to Pro, your payment is processed by Apple, Google, or RevenueCat. We never see or store your credit card or bank information. We only receive your subscription status and a transaction identifier.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">How we use it</h2>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li>To provide Casebound &mdash; your library, your stats, your lists.</li>
+    <li>To improve book metadata for all users (your corrections, anonymized).</li>
+    <li>To diagnose crashes and bugs.</li>
+    <li>To process subscription payments.</li>
+    <li>To send essential service emails (account verification, password reset, billing receipts). No marketing emails by default; opt-in only if added later.</li>
+  </ul>
+
+  <p class="mb-6">
+    We do not sell your data. We do not share it with advertisers. We do not build a profile of you for any purpose other than running the service.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Third-party services</h2>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li><strong>Supabase</strong> &mdash; hosts our database, authentication, and file storage. US-based.</li>
+    <li><strong>Sentry</strong> &mdash; collects crash reports. US-based.</li>
+    <li><strong>PostHog</strong> &mdash; will collect aggregate analytics if and when we add it. We will update this policy first.</li>
+    <li><strong>RevenueCat</strong> &mdash; handles subscription state. US-based.</li>
+    <li><strong>Open Library, Google Books, Hardcover</strong> &mdash; public metadata sources we query.</li>
+  </ul>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Your rights</h2>
+
+  <p class="mb-4">You can:</p>
+
+  <ul class="list-disc pl-6 space-y-2 mb-4">
+    <li><strong>Access</strong> your data &mdash; everything Casebound has about you is visible in the app.</li>
+    <li><strong>Correct</strong> your data &mdash; edit any record, anytime.</li>
+    <li><strong>Export</strong> your data &mdash; Pro users can export to CSV or JSON.</li>
+    <li><strong>Delete</strong> your account &mdash; Settings &rarr; Account &rarr; Delete account. This permanently removes your account and personal data within 30 days. Anonymized metadata corrections may remain in the shared cache.</li>
+  </ul>
+
+  <p class="mb-6">
+    EU/EEA, UK, and California users have additional rights under GDPR / CCPA &mdash; to request access, correction, deletion, and to object to processing. Email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a> for any rights request.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Children</h2>
+
+  <p class="mb-6">
+    Casebound is not directed to children under 13. We do not knowingly collect data from anyone under 13. If a minor under 13 has created an account, please email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a> and we will delete it promptly.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">International transfers</h2>
+
+  <p class="mb-6">
+    Casebound is operated from the United States. By using the service, you consent to having your data transferred to and processed in the US.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Changes</h2>
+
+  <p class="mb-6">
+    We'll update this policy as the service evolves. Material changes will be announced in-app and via email if you have notifications enabled. Continued use after a change constitutes acceptance.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Contact</h2>
+
+  <p class="mb-2">
+    <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>
+  </p>
+
+  <p class="text-casebound-muted text-sm">
+    Pixel Master Technologies LLC<br />
+    [Address &mdash; placeholder, confirm before public launch]
+  </p>
+</ProseLayout>
