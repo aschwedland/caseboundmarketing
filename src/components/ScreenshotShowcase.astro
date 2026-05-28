@@ -1,0 +1,49 @@
+---
+const screenshots = [
+  { file: 'casebound-ss-01.png', alt: 'Casebound library view: a list of books with cover thumbnails, status pills, and format icons.' },
+  { file: 'casebound-ss-02.png', alt: 'Book detail page showing the same book tracked as hardcover and audiobook, each with its own progress.' },
+  { file: 'casebound-ss-03.png', alt: 'A live reading session timer with the current book and elapsed minutes.' },
+  { file: 'casebound-ss-04.png', alt: 'Filter and sort controls — status, format, ownership, and list, all selectable.' },
+  { file: 'casebound-ss-05.png', alt: 'ISBN barcode scanner viewfinder over a book\'s back cover.' },
+  { file: 'casebound-ss-06.png', alt: 'Custom lists view showing tags layered on top of the canonical library.' },
+  { file: 'casebound-ss-07.png', alt: 'Next-read randomizer suggesting a book from the to-be-read shelf.' },
+  { file: 'casebound-ss-08.png', alt: 'Pricing screen with Free and Pro tier cards side by side.' },
+];
+---
+
+<section aria-label="App screenshots" id="screenshots" class="bg-casebound-wallpaper px-6 py-16 sm:py-24">
+  <div class="max-w-5xl mx-auto mb-10">
+    <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-3 leading-snug">
+      The app, in eight screens
+    </h2>
+    <p class="text-casebound-muted text-base sm:text-[17px]">
+      Track what you read. Catalog what you own. See for yourself.
+    </p>
+  </div>
+
+  <!-- Scroll container -->
+  <div class="no-scrollbar flex gap-6 sm:gap-8 overflow-x-auto snap-x snap-mandatory px-6 sm:px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]">
+    {screenshots.map((s) => (
+      <img
+        src={`/screenshots/${s.file}`}
+        alt={s.alt}
+        width="1290"
+        height="2796"
+        loading="lazy"
+        decoding="async"
+        class="shrink-0 w-[280px] sm:w-[320px] h-auto rounded-2xl shadow-[0_16px_40px_rgba(30,66,49,0.12)] snap-center"
+      />
+    ))}
+  </div>
+
+  <p class="text-center text-casebound-muted text-sm mt-6">Scroll &rarr;</p>
+</section>
+
+<style>
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
