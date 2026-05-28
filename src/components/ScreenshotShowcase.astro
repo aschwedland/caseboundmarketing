@@ -11,8 +11,8 @@ const screenshots = [
 ];
 ---
 
-<section aria-label="App screenshots" id="screenshots" class="bg-casebound-wallpaper px-6 py-16 sm:py-24">
-  <div class="max-w-5xl mx-auto mb-10">
+<section aria-label="App screenshots" id="screenshots" class="bg-casebound-wallpaper py-16 sm:py-24 overflow-hidden">
+  <div class="max-w-5xl mx-auto mb-10 px-6">
     <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-3 leading-snug">
       The app, in eight screens
     </h2>
@@ -21,29 +21,217 @@ const screenshots = [
     </p>
   </div>
 
-  <!-- Scroll container -->
-  <div class="no-scrollbar flex gap-6 sm:gap-8 overflow-x-auto snap-x snap-mandatory px-6 sm:px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]">
-    {screenshots.map((s) => (
-      <img
-        src={`/screenshots/${s.file}`}
-        alt={s.alt}
-        width="1290"
-        height="2796"
-        loading="lazy"
-        decoding="async"
-        class="shrink-0 w-[280px] sm:w-[320px] h-auto rounded-2xl shadow-[0_16px_40px_rgba(30,66,49,0.12)] snap-center"
-      />
-    ))}
-  </div>
+  <!-- Carousel track -->
+  <div class="carousel-viewport relative" role="region" aria-roledescription="carousel">
+    <div class="carousel-track flex items-center" id="screenshot-track">
+      {/* Render 3 copies: [clone-set] [original-set] [clone-set] for seamless looping */}
+      {[0, 1, 2].map((setIndex) =>
+        screenshots.map((s, i) => (
+          <div
+            class="carousel-slide shrink-0 px-3 sm:px-4 transition-all duration-300 ease-out"
+            data-index={i}
+            data-set={setIndex}
+          >
+            <img
+              src={`/screenshots/${s.file}`}
+              alt={s.alt}
+              width="1290"
+              height="2796"
+              loading={setIndex === 1 && i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              class="w-60 sm:w-70 md:w-75 h-auto rounded-2xl shadow-[0_16px_40px_rgba(30,66,49,0.12)] transition-transform duration-300 ease-out"
+            />
+          </div>
+        ))
+      )}
+    </div>
 
-  <p class="text-center text-casebound-muted text-sm mt-6">Scroll &rarr;</p>
+    <!-- Navigation arrows -->
+    <button
+      class="carousel-btn carousel-btn-prev absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-casebound-paper/80 backdrop-blur border border-casebound-border flex items-center justify-center text-casebound-text hover:bg-casebound-paper transition-colors z-10"
+      aria-label="Previous screenshot"
+      id="carousel-prev"
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button
+      class="carousel-btn carousel-btn-next absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-casebound-paper/80 backdrop-blur border border-casebound-border flex items-center justify-center text-casebound-text hover:bg-casebound-paper transition-colors z-10"
+      aria-label="Next screenshot"
+      id="carousel-next"
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
 </section>
 
 <style>
-  .no-scrollbar {
-    scrollbar-width: none;
+  .carousel-viewport {
+    cursor: grab;
   }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  .carousel-viewport:active {
+    cursor: grabbing;
+  }
+  .carousel-track {
+    will-change: transform;
+  }
+  .carousel-slide {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  .carousel-slide.active {
+    opacity: 1;
+    transform: scale(1);
   }
 </style>
+
+<script>
+  function initCarousel() {
+    const track = document.getElementById('screenshot-track');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    if (!track || !prevBtn || !nextBtn) return;
+
+    const TOTAL = 8;
+    const slides = Array.from(track.children) as HTMLElement[];
+    const totalSlides = slides.length; // 24 (3 sets of 8)
+
+    let currentIndex = TOTAL; // Start at the first slide of the middle set
+    let isTransitioning = false;
+
+    function getSlideWidth(): number {
+      if (!slides[0]) return 300;
+      return slides[0].offsetWidth;
+    }
+
+    function updatePosition(animate = true): void {
+      const slideWidth = getSlideWidth();
+      const viewportWidth = track.parentElement!.offsetWidth;
+      const offset = -(currentIndex * slideWidth) + (viewportWidth / 2) - (slideWidth / 2);
+
+      if (animate) {
+        track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)';
+      } else {
+        track.style.transition = 'none';
+      }
+      track.style.transform = `translateX(${offset}px)`;
+
+      // Update active states
+      slides.forEach((slide, i) => {
+        if (i === currentIndex) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+    }
+
+    function goTo(index: number): void {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      currentIndex = index;
+      updatePosition(true);
+    }
+
+    // After animated transition, silently jump to the equivalent position in the middle set
+    track.addEventListener('transitionend', () => {
+      isTransitioning = false;
+
+      if (currentIndex < TOTAL) {
+        // Wrapped past the beginning — jump to equivalent in middle set
+        currentIndex = currentIndex + TOTAL;
+        updatePosition(false);
+      } else if (currentIndex >= TOTAL * 2) {
+        // Wrapped past the end — jump to equivalent in middle set
+        currentIndex = currentIndex - TOTAL;
+        updatePosition(false);
+      }
+    });
+
+    prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+    nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+
+    // Keyboard navigation
+    track.parentElement!.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(currentIndex - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goTo(currentIndex + 1); }
+    });
+
+    // Touch/drag support
+    let dragStartX = 0;
+    let dragDelta = 0;
+    let isDragging = false;
+
+    function onPointerDown(e: PointerEvent): void {
+      if (isTransitioning) return;
+      // Don't capture pointer if clicking a nav button
+      if ((e.target as HTMLElement).closest('.carousel-btn')) return;
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragDelta = 0;
+      track.style.transition = 'none';
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    }
+
+    function onPointerMove(e: PointerEvent): void {
+      if (!isDragging) return;
+      dragDelta = e.clientX - dragStartX;
+      const slideWidth = getSlideWidth();
+      const viewportWidth = track.parentElement!.offsetWidth;
+      const baseOffset = -(currentIndex * slideWidth) + (viewportWidth / 2) - (slideWidth / 2);
+      track.style.transform = `translateX(${baseOffset + dragDelta}px)`;
+    }
+
+    function onPointerUp(): void {
+      if (!isDragging) return;
+      isDragging = false;
+      const threshold = getSlideWidth() * 0.2;
+      if (dragDelta > threshold) {
+        goTo(currentIndex - 1);
+      } else if (dragDelta < -threshold) {
+        goTo(currentIndex + 1);
+      } else {
+        updatePosition(true);
+        isTransitioning = false;
+      }
+    }
+
+    const viewport = track.parentElement!;
+    viewport.addEventListener('pointerdown', onPointerDown);
+    viewport.addEventListener('pointermove', onPointerMove);
+    viewport.addEventListener('pointerup', onPointerUp);
+    viewport.addEventListener('pointercancel', onPointerUp);
+
+    // Prevent img drag
+    track.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Mouse wheel horizontal scroll on desktop
+    viewport.addEventListener('wheel', (e: WheelEvent) => {
+      // Use deltaX for horizontal scroll, or deltaY if shift is held or no horizontal delta
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(delta) < 10) return;
+      e.preventDefault();
+      if (delta > 0) {
+        goTo(currentIndex + 1);
+      } else {
+        goTo(currentIndex - 1);
+      }
+    }, { passive: false });
+
+    // Init
+    updatePosition(false);
+
+    // Recalculate on resize
+    window.addEventListener('resize', () => updatePosition(false));
+  }
+
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCarousel);
+  } else {
+    initCarousel();
+  }
+</script>
