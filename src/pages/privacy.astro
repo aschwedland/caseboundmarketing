@@ -4,107 +4,250 @@ import ProseLayout from '../layouts/ProseLayout.astro';
 
 <ProseLayout
   title="Privacy policy — Casebound"
-  description="Casebound privacy policy. What we collect, how we use it, and the choices you have."
+  description="Casebound privacy policy. What we collect, who can see it, who we share it with, and the control you have."
   canonicalUrl="https://casebound.co/privacy"
 >
   <h1 class="font-serif font-medium text-3xl sm:text-4xl mb-2">Privacy policy</h1>
-  <p class="text-casebound-muted text-sm mb-8"><em>Last updated: May 28, 2026.</em></p>
-
-  <blockquote class="border-l-4 border-casebound-gold pl-4 text-casebound-muted text-[15px] mb-8 italic">
-    This policy is in interim form pending review by counsel. It will be updated before public launch.
-  </blockquote>
+  <p class="text-casebound-muted text-sm mb-8"><em>Effective August 16, 2026. Last updated August 16, 2026.</em></p>
 
   <p class="mb-6">
-    Casebound is built by Pixel Master Technologies LLC ("we," "us," "our"). This policy explains what information we collect, how we use it, and the choices you have. We've tried to write it in plain language. If anything's unclear, email us at <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>.
+    Casebound is operated by <strong>Pixel Master Technologies LLC</strong> ("Pixel Master," "we," "us"), a Colorado limited liability company. For the purposes of the GDPR and similar laws, Pixel Master is the data controller. This policy explains what Casebound collects, why, who we share it with, and what control you have. If you have a question about anything here, email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>.
+  </p>
+
+  <p class="mb-6">
+    This policy replaces the version dated May 28, 2026, which described Casebound before it had profiles, following, reviews, book clubs, lending, or photo uploads.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">The short version</h2>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li>Your library, reading sessions and stats are private by default, and you control per book whether anything about that book is visible to other people.</li>
+    <li>Casebound has an optional social layer. Nothing in it is required to use the app, but anything you post in it is visible to other people, and some of it is visible to anyone on the internet.</li>
+    <li>We do not sell your personal information, and we do not share it with advertisers.</li>
+    <li>You can export your data and delete your account, permanently, from inside the app.</li>
+  </ul>
+
+  <p class="mb-6">
+    The rest of this document is the long version. The sections on what we collect and what other people can see are the ones that matter most.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Who this applies to</h2>
+
+  <p class="mb-6">
+    This policy covers the Casebound mobile app on iOS and Android, the casebound.co website, and the backend services that support them. Casebound is not directed to children under 13, and we do not knowingly collect personal information from anyone under 13. If you believe a child under 13 has created an account, email us and we will delete it.
   </p>
 
   <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">What we collect</h2>
 
-  <p class="mb-4">
-    <strong>Account information.</strong> When you create a Casebound account, we collect your email address and a hashed password. If you sign in with Apple or Google, we receive the email associated with that account and an opaque identifier &mdash; we never see your Apple or Google password.
-  </p>
-
-  <p class="mb-4">
-    <strong>Books in your library.</strong> The books you add, their reading status, your ownership and format records, your reading sessions, your notes, your lists. This is the data that makes Casebound work for you.
-  </p>
-
-  <p class="mb-4">
-    <strong>Book metadata.</strong> When you scan an ISBN or search for a book, we look up its metadata (title, author, page count, cover image) from public sources (Open Library, Google Books, Hardcover). If you correct a wrong record, the correction improves the shared metadata cache for all users.
-  </p>
-
-  <p class="mb-4">
-    <strong>Technical information.</strong> Device type, OS version, app version, and basic crash diagnostics, collected via Sentry. When and if we add product analytics (planned via PostHog), it will be limited to aggregate usage patterns &mdash; never personal content. We will update this policy before adding analytics.
-  </p>
-
-  <p class="mb-6">
-    <strong>Payment information.</strong> If you subscribe to Pro, your payment is processed by Apple, Google, or RevenueCat. We never see or store your credit card or bank information. We only receive your subscription status and a transaction identifier.
-  </p>
-
-  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">How we use it</h2>
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">Information you give us</h3>
 
   <ul class="list-disc pl-6 space-y-2 mb-6">
-    <li>To provide Casebound &mdash; your library, your stats, your lists.</li>
-    <li>To improve book metadata for all users (your corrections, anonymized).</li>
-    <li>To diagnose crashes and bugs.</li>
-    <li>To process subscription payments.</li>
-    <li>To send essential service emails (account verification, password reset, billing receipts). No marketing emails by default; opt-in only if added later.</li>
+    <li><strong>Email address.</strong> Required to create an account. If you sign in with Apple using Hide My Email, we receive and store only the private relay address Apple gives us.</li>
+    <li><strong>Password.</strong> Only if you create an account with email and password. Stored as a salted hash by our authentication provider. We never see or store your plaintext password.</li>
+    <li><strong>Display name and username.</strong> Required. Your username is how other Casebound users find you. If you sign in with Apple and allow it, your name is used to prefill your display name on first sign-in only.</li>
+    <li><strong>Profile photo and bio.</strong> Optional.</li>
+    <li><strong>Your library.</strong> Books you add, formats you own, ownership status, reading status, page and time progress, ratings, personal notes, custom lists, wishlist.</li>
+    <li><strong>Reading sessions.</strong> Start and end times, pages or minutes read, the book, and whether the session was logged live or entered manually.</li>
+    <li><strong>Reviews and social content.</strong> Book reviews, book club posts and comments, activity feed posts and comments, friend recommendations and their notes, club names and descriptions.</li>
+    <li><strong>Photos.</strong> Book cover photos and book spine photos you capture, profile avatars, photos attached to posts, and book club cover images.</li>
+    <li><strong>Lending records.</strong> If you use lending, the book, the counterparty, dates, and return status.</li>
+    <li><strong>Support messages.</strong> Anything you send through in-app feedback, including your email address as reply-to.</li>
   </ul>
 
-  <p class="mb-6">
-    We do not sell your data. We do not share it with advertisers. We do not build a profile of you for any purpose other than running the service.
-  </p>
-
-  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Third-party services</h2>
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">Information collected automatically</h3>
 
   <ul class="list-disc pl-6 space-y-2 mb-6">
-    <li><strong>Supabase</strong> &mdash; hosts our database, authentication, and file storage. US-based.</li>
-    <li><strong>Sentry</strong> &mdash; collects crash reports. US-based.</li>
-    <li><strong>PostHog</strong> &mdash; will collect aggregate analytics if and when we add it. We will update this policy first.</li>
-    <li><strong>RevenueCat</strong> &mdash; handles subscription state. US-based.</li>
-    <li><strong>Open Library, Google Books, Hardcover</strong> &mdash; public metadata sources we query.</li>
-  </ul>
-
-  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Your rights</h2>
-
-  <p class="mb-4">You can:</p>
-
-  <ul class="list-disc pl-6 space-y-2 mb-4">
-    <li><strong>Access</strong> your data &mdash; everything Casebound has about you is visible in the app.</li>
-    <li><strong>Correct</strong> your data &mdash; edit any record, anytime.</li>
-    <li><strong>Export</strong> your data &mdash; Pro users can export to CSV or JSON.</li>
-    <li><strong>Delete</strong> your account &mdash; Settings &rarr; Account &rarr; Delete account. This permanently removes your account and personal data within 30 days. Anonymized metadata corrections may remain in the shared cache.</li>
+    <li><strong>User ID.</strong> A random identifier assigned to your account.</li>
+    <li><strong>Crash reports and diagnostics.</strong> Stack traces, device model, OS version, app version, and the sequence of screens and actions immediately before an error.</li>
+    <li><strong>Product analytics.</strong> Which screens you open and which features you use, associated with your user ID. <strong>This is off unless you turn it on</strong> &mdash; the switch is in Settings &rarr; Privacy &amp; data &rarr; "Share anonymous analytics."</li>
+    <li><strong>Subscription status.</strong> Whether you have an active Casebound Pro subscription, when it renews or expires, and the store transaction identifiers behind it.</li>
+    <li><strong>Push token.</strong> If you enable notifications, the device token needed to deliver them.</li>
   </ul>
 
   <p class="mb-6">
-    EU/EEA, UK, and California users have additional rights under GDPR / CCPA &mdash; to request access, correction, deletion, and to object to processing. Email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a> for any rights request.
+    We do <strong>not</strong> collect your precise or coarse location, your contacts, your calendar, your messages, your browsing history outside the app, or any advertising identifier. We do not use any tracking technology for advertising purposes, and we do not participate in cross-app or cross-site tracking.
   </p>
 
-  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Children</h2>
+  <p class="mb-6">
+    We never receive your card number. Subscriptions are purchased through the Apple App Store or Google Play, which process payment and share with us only the fact of a valid purchase and its status.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">What other people can see</h2>
+
+  <blockquote class="border-l-4 border-casebound-gold pl-4 text-casebound-muted text-[15px] mb-8 italic">
+    This is the section most privacy policies bury. Please read it.
+  </blockquote>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">Private by default</h3>
 
   <p class="mb-6">
-    Casebound is not directed to children under 13. We do not knowingly collect data from anyone under 13. If a minor under 13 has created an account, please email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a> and we will delete it promptly.
+    Your library, your reading sessions, your stats, your streaks, your notes, your wishlist and your custom lists are private unless you take an action that makes something visible. Casebound's privacy control is <strong>per book</strong>, not per profile. Each book in your library has its own privacy toggle, and a book marked private is excluded from everything below.
+  </p>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">Visible to other Casebound users</h3>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li>Your username, display name, avatar and bio</li>
+    <li>Your earned badges</li>
+    <li>Your non-private library entries, including reading status and rating</li>
+    <li>Reviews you write, attached to your profile</li>
+    <li>Book club posts, comments and membership, to other members of that club</li>
+    <li>Activity feed posts and comments, to people who follow you</li>
+    <li>Friend recommendations you send, to the person you send them to</li>
+    <li>Your followers and following lists</li>
+    <li>Community spine photos you upload, to other users who own the same edition</li>
+    <li>If you lend a book through Casebound, the borrower's progress on that specific book only is visible to you, and nothing else about their library</li>
+  </ul>
+
+  <p class="mb-6">
+    Following is open &mdash; anyone can follow you, and follower counts are visible.
+  </p>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">Visible without signing in</h3>
+
+  <p class="mb-4">
+    Some data is readable by anyone with access to our public API, including people who are not signed in to Casebound: public profile fields (username, display name, avatar and bio), non-private library entries, and earned badges.
+  </p>
+
+  <p class="mb-6">
+    <strong>Uploaded images are stored in public storage buckets.</strong> Avatars, post photos, spine photos and club cover images are served from URLs that are not access-controlled. Anyone who has the URL can view the file, whether or not they have a Casebound account. Do not upload an image you would not be willing to have publicly accessible. If this is not what you want, mark books private and do not upload photos.
+  </p>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">The shared book database</h3>
+
+  <p class="mb-6">
+    Casebound maintains one shared catalogue of book metadata &mdash; titles, authors, page counts, publishers, covers, genres &mdash; used by every user. It is not personal to you. If you correct or add book metadata, that correction becomes part of the shared catalogue and benefits other users. Your identity is not displayed alongside it, but the record of who created a book entry is retained internally.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">How we use your information</h2>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li>To operate the app: your library, sessions, stats, lists and social features</li>
+    <li>To authenticate you and keep your account secure</li>
+    <li>To deliver notifications you have enabled, including reading reminders, follows, club activity and recommendations</li>
+    <li>To identify books from photos you capture</li>
+    <li>To diagnose crashes and fix defects</li>
+    <li>To understand which features are used, in aggregate, so we can decide what to build</li>
+    <li>To manage subscriptions and entitlements</li>
+    <li>To respond to your support requests</li>
+    <li>To enforce our Terms of Service and Community Guidelines, and to comply with law</li>
+  </ul>
+
+  <p class="mb-6">
+    We do not use your information to build advertising profiles, and we do not sell or rent personal information to anyone. We have not sold or shared personal information for cross-context behavioural advertising in the preceding twelve months, and we do not intend to.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Who we share it with</h2>
+
+  <p class="mb-4">
+    We use the following service providers. Each processes data on our instructions, for the purpose listed, and not for their own purposes. All are US-based.
+  </p>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li><strong>Supabase</strong> &mdash; authentication, database, file storage. This is where your account and library live.</li>
+    <li><strong>Railway</strong> &mdash; hosts our book metadata service.</li>
+    <li><strong>Sentry</strong> &mdash; crash reporting and error diagnostics, associated with your user ID.</li>
+    <li><strong>PostHog</strong> &mdash; product analytics, associated with your user ID, only if you have enabled analytics.</li>
+    <li><strong>RevenueCat</strong> &mdash; subscription state and entitlements.</li>
+    <li><strong>Expo</strong> &mdash; push notification delivery.</li>
+    <li><strong>Apple and Google</strong> &mdash; payment processing, sign-in, and app distribution.</li>
+  </ul>
+
+  <p class="mb-4">
+    <strong>Photo processing.</strong> When you use the cover scanner or spine photography features, the image is transmitted to Google's Gemini API and, in some fallback cases, Google Cloud Vision, for the sole purpose of identifying the book. We do not control Google's handling of that request beyond the terms of their API.
+  </p>
+
+  <p class="mb-6">
+    <strong>Book metadata sources.</strong> We query Open Library, Google Books and Hardcover for book information. These requests contain the ISBN or search text &mdash; they do not contain your identity.
+  </p>
+
+  <p class="mb-6">
+    We may also disclose information if we are legally required to, or where we believe in good faith that disclosure is necessary to protect our rights, your safety, or the safety of others. If Pixel Master is acquired or merges with another company, your information may transfer as part of that transaction. We will give notice in the app before that happens.
   </p>
 
   <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">International transfers</h2>
 
   <p class="mb-6">
-    Casebound is operated from the United States. By using the service, you consent to having your data transferred to and processed in the US.
+    Pixel Master operates in the United States, and our service providers store and process data in the United States. If you use Casebound from outside the United States, your information is transferred to and processed in the United States, which may have different data protection rules than your own country. Where required, we rely on the European Commission's Standard Contractual Clauses, or an equivalent mechanism, for transfers out of the European Economic Area and the United Kingdom.
   </p>
 
-  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Changes</h2>
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Your rights and controls</h2>
+
+  <p class="mb-4">Regardless of where you live, you can:</p>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li><strong>Access and correct</strong> your account information and library from within the app.</li>
+    <li><strong>Export</strong> your library and reading data from Settings.</li>
+    <li><strong>Control visibility</strong> per book with the privacy toggle.</li>
+    <li><strong>Block and report</strong> other users.</li>
+    <li><strong>Turn off notifications</strong> in Settings or at the OS level.</li>
+    <li><strong>Opt out of product analytics</strong> in Settings &rarr; Privacy &amp; data. It is off by default; turning it on is a choice you make.</li>
+    <li><strong>Make new books private by default</strong> in Settings &rarr; Privacy &amp; data.</li>
+    <li><strong>Delete your account</strong> from Settings. This is a permanent deletion of your account, library, sessions, reviews, posts, uploaded photos and profile &mdash; not a deactivation. Full detail is on our <a href="/delete-account" class="text-casebound-green underline underline-offset-4">account deletion page</a>.</li>
+  </ul>
 
   <p class="mb-6">
-    We'll update this policy as the service evolves. Material changes will be announced in-app and via email if you have notifications enabled. Continued use after a change constitutes acceptance.
+    If you signed in with Apple, deleting your account also revokes Casebound's Sign in with Apple token, so the app no longer appears in your Apple ID's list of connected apps.
+  </p>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">If you are in the EEA, UK or Switzerland</h3>
+
+  <p class="mb-4">
+    You have the right to access, rectify, erase, restrict and object to processing of your personal data, and the right to data portability. You may lodge a complaint with your local supervisory authority.
+  </p>
+
+  <p class="mb-6">
+    Our legal bases: <strong>contract</strong> for operating the app and your account; <strong>legitimate interests</strong> for crash reporting, security and abuse prevention; <strong>consent</strong> for product analytics, push notifications and camera access; and <strong>legal obligation</strong> where applicable.
+  </p>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">If you are in California</h3>
+
+  <p class="mb-6">
+    You have the right to know what personal information we collect, to delete it, to correct it, and to not be discriminated against for exercising those rights. We do not sell or share personal information as those terms are defined by the CCPA/CPRA.
+  </p>
+
+  <h3 class="font-serif font-medium text-lg mt-8 mb-3">If you are in Colorado or another US state with a comprehensive privacy law</h3>
+
+  <p class="mb-6">
+    Colorado, where we are based, along with a growing number of other states, gives residents rights to access, correct, delete and obtain a portable copy of their personal data, and to opt out of targeted advertising, the sale of personal data, and certain profiling. We do not sell personal data, do not use it for targeted advertising, and do not profile you in a way that produces legal or similarly significant effects. We honour these rights for residents of any US state regardless of whether the relevant law's thresholds apply to us, and you can exercise them in the app or by emailing us.
+  </p>
+
+  <p class="mb-6">
+    To exercise any right not available in the app, email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a> with "Privacy request" in the subject line. We will verify your request against the email address on your account and respond within the time required by applicable law.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Content moderation</h2>
+
+  <p class="mb-6">
+    Casebound has user-generated content. Every surface that displays content from another user provides a way to report it and to block that user. Reported content is reviewed against our Community Guidelines, which are available in the app under Settings and are presented when you first post. Content that violates them may be removed and accounts may be suspended or terminated. Reviews that receive reports from multiple distinct users are automatically hidden pending review. To report content or an account outside the app, email <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Retention</h2>
+
+  <ul class="list-disc pl-6 space-y-2 mb-6">
+    <li><strong>Account, library and social content</strong> &mdash; kept until you delete the item or your account.</li>
+    <li><strong>Crash reports and diagnostics</strong> &mdash; retained for up to 90 days.</li>
+    <li><strong>Product analytics</strong> &mdash; retained for up to 12 months.</li>
+    <li><strong>Subscription records</strong> &mdash; retained as long as required for tax, accounting and dispute resolution.</li>
+    <li><strong>Moderation reports</strong> &mdash; retained while the report is open and for a reasonable period after resolution, so repeat behaviour can be identified.</li>
+  </ul>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Security</h2>
+
+  <p class="mb-6">
+    Data is encrypted in transit using TLS on every connection between the app and our services. Passwords are stored as salted hashes. Access to production data is restricted to the operator of the service. Database access is governed by row-level security rules that scope each query to the requesting user. No system is perfectly secure. Note in particular the limitation described above: uploaded images are stored in public buckets and are not access-controlled.
+  </p>
+
+  <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Changes to this policy</h2>
+
+  <p class="mb-6">
+    If we make a material change, we will update the effective date at the top and notify you in the app before the change takes effect. Continuing to use Casebound after that means you accept the updated policy.
   </p>
 
   <h2 class="font-serif font-medium text-xl sm:text-2xl mt-10 mb-4">Contact</h2>
 
-  <p class="mb-2">
-    <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>
-  </p>
-
-  <p class="text-casebound-muted text-sm">
+  <p class="mb-6">
     Pixel Master Technologies LLC<br />
-    [Address &mdash; placeholder, confirm before public launch]
+    <a href="mailto:support@pixel-master.com" class="text-casebound-green underline underline-offset-4">support@pixel-master.com</a>
   </p>
 </ProseLayout>
