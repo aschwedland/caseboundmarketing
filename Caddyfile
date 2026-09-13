@@ -1,0 +1,87 @@
+# Overrides Railpack's default Caddyfile for this static Astro build.
+#
+# Copied verbatim from railwayapp/railpack core/providers/node/Caddyfile.template
+# (Railpack renders a project-root Caddyfile as a Go template with the same
+# data, so the DIST_DIR and IndexFallback placeholders below still resolve —
+# don't write template braces in comments here). The ONLY addition is the
+# apple-app-site-association Content-Type block below — keep everything else in
+# sync with the upstream template if Railpack changes it.
+#
+# Additions (all for the password-reset links, marked "Casebound:" below):
+#   - apple-app-site-association served as JSON
+#   - /reset-password: no Referer, no indexing
+#   - token_hash stripped from access-log request URIs
+
+# global options
+{
+	admin off
+	persist_config off
+	auto_https off
+
+	log {
+		format json
+	}
+
+	servers {
+		trusted_proxies static private_ranges 100.0.0.0/8 # trust railway's proxy
+	}
+}
+
+# site block, listens on the $PORT environment variable, automatically assigned by railway
+:{$PORT:80} {
+	log {
+		# Casebound: password-reset links carry a single-use sign-in token in
+		# ?token_hash=. Keep it out of Railway's logs.
+		# The explicit `fields` block also parses on Caddy < 2.8.
+		format filter {
+			wrap json
+			fields {
+				request>uri query {
+					delete token_hash
+				}
+			}
+		}
+	}
+
+	respond /health 200
+
+	# Security headers
+	header {
+		# Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
+		X-Content-Type-Options "nosniff"
+		# Remove Server header
+		-Server
+	}
+
+	# Casebound: Universal Links. Apple fetches this extensionless file and
+	# expects JSON; file_server only infers Content-Type from the extension, so
+	# without this it is served with no Content-Type at all.
+	@appSiteAssociation path /.well-known/apple-app-site-association
+	header @appSiteAssociation Content-Type application/json
+
+	# Casebound: the reset page's URL carries the token, so never send it on as a
+	# Referer, and keep the page out of search results.
+	@resetPassword path /reset-password /reset-password/
+	header @resetPassword {
+		Referrer-Policy no-referrer
+		X-Robots-Tag noindex
+	}
+
+	# serve from the 'dist' folder (Vite builds into the 'dist' folder)
+	root * {{.DIST_DIR}}
+
+	# Handle static files
+	file_server {
+		hide .git
+		hide .env*
+	}
+
+	# Compression with more formats
+	encode {
+		gzip
+		zstd
+	}
+
+	# match against direct against HTML file matches, folder-level index.html, and optionally fallback to root index.html
+	try_files {path} {path}.html {path}/index.html{{if .IndexFallback}} /index.html{{end}}
+}

@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["MV3U5TP986.com.pixelmaster.casebound"],
+        "components": [
+          {
+            "/": "/reset-password",
+            "comment": "Password reset email links open the app's reset screen"
+          },
+          {
+            "/": "/reset-password/",
+            "comment": "Same link with a trailing slash"
+          }
+        ]
+      }
+    ]
+  }
+}
