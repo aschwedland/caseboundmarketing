@@ -1,42 +1,157 @@
 ---
-const faqs = [
-  {
-    q: 'Why not just use Goodreads?',
-    a: 'Goodreads conflates shelves with reading state and user lists. When you own 500 books across overlapping shelves, you can\'t cleanly answer "what do I own?" Casebound treats your library as a canonical catalog and lists as tags layered on top. They\'re separate things, and they look that way.',
-  },
-  {
-    q: 'Is my reading data private by default?',
-    a: 'Yes. Per-book privacy toggle, no public profile by default, no social feed. You decide what \u2014 if anything \u2014 is visible.',
-  },
-  {
-    q: 'Will there be social features?',
-    a: 'Possibly. Light friend-library viewing and shared lists are on the roadmap for a later version. Casebound will never be primarily a social product.',
-  },
-  {
-    q: 'Will there be a web app?',
-    a: 'Mobile first. Web comes later if it\u2019s clearly needed.',
-  },
-];
+import { FAQS } from '../config/faq';
+
+/**
+ * Built on <details>/<summary> so the accordion is keyboard-operable and works
+ * with no JS at all. The height animation is applied to an inner wrapper,
+ * because <details> itself cannot be transitioned between states.
+ */
 ---
 
-<section class="bg-casebound-wallpaper px-6 py-16 sm:py-24">
-  <div class="max-w-2xl mx-auto">
-    <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-10 leading-snug">
-      Frequently asked questions
-    </h2>
+<section id="faq" class="cb-faq">
+  <div class="cb-faq-inner">
+    <header class="cb-header">
+      <p class="cb-eyebrow" data-reveal>Questions</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">Good to know.</h2>
+    </header>
 
-    <div class="space-y-4">
-      {faqs.map((faq) => (
-        <details class="group border border-casebound-border rounded-lg bg-casebound-paper">
-          <summary class="cursor-pointer px-6 py-4 font-medium text-base sm:text-[17px] flex items-center justify-between gap-4 list-none [&::-webkit-details-marker]:hidden">
-            <span>{faq.q}</span>
-            <span class="shrink-0 text-casebound-muted transition-transform group-open:rotate-45 text-xl leading-none" aria-hidden="true">+</span>
-          </summary>
-          <div class="px-6 pb-5 text-[15px] sm:text-base leading-relaxed text-casebound-muted">
-            {faq.a}
-          </div>
-        </details>
-      ))}
+    <div class="fq-list">
+      {
+        FAQS.map((item, i) => (
+          <details class="fq" data-reveal style={`--reveal-delay:${Math.min(i, 5) * 50}ms`}>
+            <summary class="fq-q">
+              <span>{item.q}</span>
+              <span class="fq-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </span>
+            </summary>
+            <div class="fq-awrap">
+              <p class="fq-a">{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
     </div>
   </div>
 </section>
+
+<style>
+  .cb-faq {
+    background: var(--color-casebound-surface);
+    border-top: 1px solid var(--color-casebound-border);
+    padding: 104px 32px;
+  }
+
+  .cb-faq-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .fq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fq {
+    border: 1px solid var(--color-casebound-border);
+    border-radius: 16px;
+    background: var(--color-casebound-paper);
+    padding: 20px 24px;
+  }
+
+  .fq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 600;
+    /* 44px minimum tap target on the whole row. */
+    min-height: 44px;
+  }
+
+  .fq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .fq-icon {
+    flex: none;
+    line-height: 0;
+    color: var(--color-casebound-green);
+    transition: transform 0.3s ease;
+  }
+
+  .fq[open] .fq-icon {
+    transform: rotate(45deg);
+  }
+
+  /* A closed <details> does not render its children, so there is no "from"
+     state for a transition to run against — opening would jump. Animating on
+     open instead works in every browser: the content is rendered by the time
+     the animation starts. (Closing stays instant, which reads fine.) */
+  .fq-awrap {
+    display: grid;
+    grid-template-rows: 1fr;
+    margin-top: 12px;
+  }
+
+  .fq-a {
+    overflow: hidden;
+    min-height: 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--color-casebound-muted);
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .fq[open] .fq-awrap {
+      animation: fq-open 0.35s ease;
+    }
+  }
+
+  @keyframes fq-open {
+    from {
+      grid-template-rows: 0fr;
+      opacity: 0;
+      margin-top: 0;
+    }
+    to {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fq-icon {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .cb-faq {
+      padding: 72px 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-faq {
+      padding: 56px 20px;
+    }
+    .fq {
+      padding: 16px 18px;
+    }
+    .fq-q {
+      font-size: 16.5px;
+    }
+  }
+</style>

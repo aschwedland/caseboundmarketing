@@ -1,66 +1,290 @@
 ---
-const freeTier = [
-  'Unlimited library',
-  'Basic session tracking',
+import Icon from './Icon.astro';
+
+/**
+ * COPY CORRECTIONS (see CONTENT-CHANGES.md):
+ *
+ * 1. The Free card's sub-line read "No account needed to start". Casebound
+ *    requires an account (first-run routes through account-setup/auth), so it
+ *    now reads "Free forever, no card required" — which is true.
+ *
+ * 2. The Pro list read "Data export & the Sepia theme", which contradicted
+ *    both the FAQ and this section's own footnote. src/app/export.tsx gates
+ *    only the PDF collector's report behind `isPremium`; CSV and JSON export
+ *    are free. The bullet now names the PDF report specifically.
+ *
+ * 3. "Year-in-review wraps" was listed as Pro. It is free — src/app/
+ *    year-in-review.tsx opens "a full annual reading summary, free for all
+ *    users" and contains no entitlement check. Moved to the Free column.
+ *
+ * 4. "Cloud sync across devices" was listed as Pro. Nothing gates sync:
+ *    src/lib/SyncProvider.tsx has no entitlement checks, an account is
+ *    mandatory, and all data is Supabase-backed, so free users already sync.
+ *    Removed rather than moved — the app's own upsell strings still market
+ *    sync as Pro even though PREMIUM_FEATURES doesn't list it, and the site
+ *    shouldn't take a side in that inconsistency. Flagged in TODO_FOR_DREW.
+ *
+ * The replacement bullets are the real gates, from PREMIUM_FEATURES
+ * (src/lib/constants.ts:32-38) plus the checks in useClubJoinAction.ts,
+ * library.tsx and appearance.tsx.
+ *
+ * Prices are unchanged and match what the current live site already shows
+ * ($29.99/yr, $4.99/mo) and the app's free-tier copy ("5 lists · basic stats"
+ * in src/app/(tabs)/settings.tsx). They still want a StoreKit / Play Billing
+ * check before launch — see TODO_FOR_DREW.md.
+ */
+
+const free = [
+  'Unlimited library & catalog',
+  'Reading sessions & basic stats',
   'Up to 5 lists',
-  'Basic stats (week, month, year)',
-  'ISBN scan',
-  'Privacy toggle',
-  'Single device',
+  'ISBN scan & title search',
+  'Year in Review',
+  'CSV & JSON export',
+  'Privacy controls',
 ];
 
-const proTier = [
-  'Everything in Free, plus:',
-  'Unlimited lists',
-  'Advanced stats and insights',
-  'Year-in-review wraps',
-  'Custom dashboard and filters',
-  'Cloud sync across devices',
-  'Data export',
-  'Themes',
+const pro = [
+  'Unlimited lists & smart lists',
+  'Advanced stats & insights',
+  'Unlimited book clubs',
+  'Customizable bookshelf & spine photos',
+  'PDF collector’s report & the Sepia theme',
 ];
 ---
 
-<section class="bg-casebound-paper px-6 py-16 sm:py-24">
-  <div class="max-w-3xl mx-auto">
-    <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-10 leading-snug">
-      Free is useful; paid is power
-    </h2>
+<section id="pricing" class="cb-pricing">
+  <div class="cb-pricing-inner">
+    <header class="cb-header">
+      <p class="cb-eyebrow" data-reveal>Pricing</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">
+        Free is useful.<br />Pro is power.
+      </h2>
+      <p class="cb-lede cb-pricing-lede" data-reveal style="--reveal-delay:100ms">
+        Your full library, real session tracking and your data on the way out
+        are free forever. Pro adds depth, not permission.
+      </p>
+    </header>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-      <!-- Free card -->
-      <div class="border border-casebound-border rounded-xl p-6 sm:p-8 bg-casebound-wallpaper">
-        <h3 class="font-serif font-medium text-xl mb-1">Free</h3>
-        <p class="text-casebound-muted text-sm mb-6">No credit card needed</p>
-        <ul class="space-y-2.5 text-[15px] sm:text-base">
-          {freeTier.map((item) => (
-            <li class="flex gap-3">
-              <span class="text-casebound-green shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>
-              <span>{item}</span>
-            </li>
-          ))}
+    <div class="pr-grid">
+      <div class="pr-card pr-free" data-reveal style="--reveal-delay:140ms">
+        <h3 class="pr-name">Free</h3>
+        <p class="pr-sub">Free forever, no card required</p>
+        <p class="pr-price">
+          <span class="pr-amount tabular">$0</span>
+          <span class="pr-period">forever</span>
+        </p>
+        <ul class="pr-list">
+          {
+            free.map((f) => (
+              <li>
+                <span class="pr-check" aria-hidden="true">
+                  <Icon name="check" size={15} stroke={2.6} />
+                </span>
+                <span>{f}</span>
+              </li>
+            ))
+          }
         </ul>
       </div>
 
-      <!-- Pro card -->
-      <div class="border-2 border-casebound-gold/40 rounded-xl p-6 sm:p-8 bg-casebound-dark-green text-casebound-paper">
-        <h3 class="font-serif font-medium text-xl mb-1">Pro</h3>
-        <p class="text-sm opacity-80 mb-6">
-          <span class="font-medium">$4.99/month</span> or <span class="font-medium">$29.99/year</span>
+      <div class="pr-card pr-pro" data-reveal style="--reveal-delay:180ms">
+        <span class="pr-best">Best value</span>
+        <h3 class="pr-name pr-name-pro">Pro</h3>
+        <p class="pr-sub pr-sub-pro">Everything in Free, plus the power tools</p>
+        <p class="pr-price">
+          <span class="pr-amount pr-amount-pro tabular">$29.99</span>
+          <span class="pr-period pr-period-pro">/year</span>
         </p>
-        <ul class="space-y-2.5 text-[15px] sm:text-base">
-          {proTier.map((item, i) => (
-            <li class={`flex gap-3 ${i === 0 ? 'text-sm opacity-80 mb-1' : ''}`}>
-              {i > 0 && <span class="text-casebound-gold shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>}
-              <span>{item}</span>
-            </li>
-          ))}
+        <p class="pr-savings">Just $2.50/mo · save 50% · or $4.99 monthly</p>
+        <ul class="pr-list pr-list-pro">
+          {
+            pro.map((f) => (
+              <li>
+                <span class="pr-check pr-check-pro" aria-hidden="true">
+                  <Icon name="check" size={15} stroke={2.6} />
+                </span>
+                <span>{f}</span>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>
 
-    <p class="text-casebound-muted text-[15px] sm:text-base leading-relaxed">
-      Free is genuinely useful &mdash; your full library, real session tracking, ISBN scan. Pro unlocks depth, devices, and exports.
+    <p class="pr-foot" data-reveal style="--reveal-delay:220ms">
+      No lifetime tier, no upsells buried in the app. Export your data anytime,
+      on any plan.
     </p>
   </div>
 </section>
+
+<style>
+  .cb-pricing {
+    background: var(--color-casebound-paper);
+    padding: 104px 32px;
+  }
+
+  .cb-pricing-inner {
+    max-width: 940px;
+    margin: 0 auto;
+  }
+
+  .cb-pricing-lede {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .pr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    align-items: stretch;
+  }
+
+  .pr-card {
+    position: relative;
+    border-radius: 22px;
+    padding: 34px 32px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pr-free {
+    background: var(--color-casebound-surface);
+    border: 1px solid var(--color-casebound-border);
+  }
+
+  .pr-pro {
+    background: #1b3b2c;
+    border: 1px solid var(--color-casebound-dark-green);
+    color: var(--color-casebound-ink-text);
+    box-shadow: 0 30px 60px -30px rgba(35, 74, 55, 0.6);
+  }
+
+  .pr-best {
+    position: absolute;
+    top: 22px;
+    right: 26px;
+    background: var(--color-casebound-gold-bright);
+    color: #3a2e1f;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 7px;
+  }
+
+  .pr-name {
+    font-family: var(--font-serif);
+    font-size: 23px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .pr-name-pro {
+    color: #fff;
+  }
+
+  .pr-sub {
+    font-size: 14px;
+    color: var(--color-casebound-faint-strong);
+    margin: 4px 0 0;
+  }
+
+  .pr-sub-pro {
+    color: #a6d7bc;
+  }
+
+  .pr-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 22px 0 0;
+  }
+
+  .pr-amount {
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1;
+  }
+
+  .pr-amount-pro {
+    color: #fff;
+  }
+
+  .pr-period {
+    font-size: 15px;
+    color: var(--color-casebound-muted);
+  }
+
+  .pr-period-pro {
+    color: #a6d7bc;
+  }
+
+  .pr-savings {
+    font-size: 13.5px;
+    color: #8fbba3;
+    margin: 10px 0 0;
+  }
+
+  .pr-list {
+    list-style: none;
+    margin: 26px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .pr-list-pro {
+    color: #eaf3ed;
+  }
+
+  .pr-list li {
+    display: flex;
+    gap: 11px;
+  }
+
+  .pr-check {
+    flex: none;
+    line-height: 0;
+    margin-top: 3px;
+    color: var(--color-casebound-green);
+  }
+
+  .pr-check-pro {
+    color: var(--color-casebound-gold-bright);
+  }
+
+  .pr-foot {
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-casebound-faint-strong);
+    margin: 26px 0 0;
+  }
+
+  @media (max-width: 1023px) {
+    .cb-pricing {
+      padding: 72px 24px;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .pr-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-pricing {
+      padding: 56px 20px;
+    }
+    .pr-card {
+      padding: 26px 22px;
+    }
+  }
+</style>

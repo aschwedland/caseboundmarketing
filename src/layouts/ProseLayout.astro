@@ -14,8 +14,36 @@ const { title, description, canonicalUrl } = Astro.props;
 
 <BaseLayout title={title} description={description} canonicalUrl={canonicalUrl}>
   <Header />
-  <main class="max-w-[640px] mx-auto px-6 py-12 sm:py-16">
+  <main id="main" class="prose-main">
     <slot />
   </main>
   <Footer />
 </BaseLayout>
+
+<style is:global>
+  /* Scoped to the prose pages via .prose-main so the landing page is
+     untouched. The legal pages carry their own Tailwind utilities inline;
+     these rules only fill the gaps those don't cover. */
+  .prose-main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px 72px;
+  }
+
+  .prose-main a {
+    text-underline-offset: 4px;
+  }
+
+  .prose-main h1,
+  .prose-main h2,
+  .prose-main h3 {
+    font-family: var(--font-serif);
+    text-wrap: balance;
+  }
+
+  @media (max-width: 767px) {
+    .prose-main {
+      padding: 32px 20px 56px;
+    }
+  }
+</style>

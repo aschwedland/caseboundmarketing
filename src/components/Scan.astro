@@ -1,0 +1,316 @@
+---
+import Phone from './Phone.astro';
+import Icon from './Icon.astro';
+
+const barcode = [3, 2, 4, 2, 3, 2, 4];
+---
+
+<section id="scan" class="cb-scan">
+  <div class="cb-split cb-scan-inner">
+    <div class="cb-split-phone" data-reveal>
+      <Phone
+        width={296}
+        screenHeight={598}
+        screenBg="#111"
+        shadow="0 34px 70px -22px rgba(43,38,32,.45)"
+        label="Casebound barcode scanner: a camera viewfinder framing a book's back-cover barcode, with options to enter an ISBN manually or search by title."
+      >
+        <div class="sn">
+          <div class="sn-head">
+            <Icon name="chevronLeft" size={19} stroke={2} />
+            <span class="sn-headtitle">Scan a barcode</span>
+            <span style="color:#E6C879"><Icon name="zap" size={17} filled /></span>
+          </div>
+
+          <div class="sn-body">
+            <div class="sn-viewfinder">
+              <span class="sn-barcode">
+                {barcode.map((w) => <span style={`width:${w}px`} />)}
+              </span>
+              <span class="sn-corner sn-tl"></span>
+              <span class="sn-corner sn-tr"></span>
+              <span class="sn-corner sn-bl"></span>
+              <span class="sn-corner sn-br"></span>
+              <span class="sn-line"></span>
+            </div>
+            <p class="sn-hint">Line up the barcode on the back cover</p>
+          </div>
+
+          <div class="sn-actions">
+            <span class="sn-btn"><Icon name="pencil" size={14} stroke={2} />Enter ISBN manually</span>
+            <span class="sn-btn"><Icon name="search" size={14} stroke={2} />Search by title</span>
+          </div>
+        </div>
+      </Phone>
+    </div>
+
+    <div class="cb-split-copy">
+      <p class="cb-eyebrow" data-reveal>Add books</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">
+        Shelved it? It's<br />already in Casebound.
+      </h2>
+      <p class="cb-lede" data-reveal style="--reveal-delay:100ms">
+        Point your camera at the barcode and the book appears — title, author,
+        page count, cover, all correct. Can't scan it? Search by title, or add
+        it by hand.
+      </p>
+
+      <div class="sn-cards">
+        <div class="sn-card" data-reveal style="--reveal-delay:140ms">
+          <span class="sn-cardicon"><Icon name="scan" size={22} stroke={1.9} /></span>
+          <h3 class="sn-cardtitle">Scan the barcode</h3>
+          <p class="sn-cardbody">A back-cover scan pulls accurate metadata in seconds.</p>
+        </div>
+
+        <div class="sn-card" data-reveal style="--reveal-delay:180ms">
+          <span class="sn-cardicon"><Icon name="search" size={22} stroke={1.9} /></span>
+          <h3 class="sn-cardtitle">Or search by title</h3>
+          <p class="sn-cardbody">Type a few words; pick the right edition from the results.</p>
+        </div>
+
+        <div class="sn-card sn-card-wide" data-reveal style="--reveal-delay:220ms">
+          <span class="sn-widetile"><Icon name="check" size={20} stroke={2.6} /></span>
+          <div>
+            <h3 class="sn-cardtitle">Fix it once, fix it for everyone</h3>
+            <p class="sn-cardbody sn-cardbody-wide">
+              Correct a wrong page count and you've improved the shared record
+              for every reader.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cb-scan {
+    background: var(--color-casebound-surface);
+    border-top: 1px solid var(--color-casebound-border);
+    padding: 108px 32px;
+  }
+
+  .cb-scan-inner {
+    max-width: 1140px;
+    grid-template-columns: 0.92fr 1.08fr;
+  }
+
+  /* ---- camera screen ---- */
+
+  .sn {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .sn-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    color: #fff;
+  }
+
+  .sn-headtitle {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .sn-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sn-viewfinder {
+    position: relative;
+    width: 196px;
+    height: 150px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .sn-barcode {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 34px;
+  }
+
+  .sn-barcode span {
+    height: 100%;
+    background: #5a5a5a;
+  }
+
+  .sn-corner {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 3px solid #74b295;
+  }
+  .sn-tl {
+    top: 0;
+    left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-top-left-radius: 3px;
+  }
+  .sn-tr {
+    top: 0;
+    right: 0;
+    border-left: 0;
+    border-bottom: 0;
+    border-top-right-radius: 3px;
+  }
+  .sn-bl {
+    bottom: 0;
+    left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom-left-radius: 3px;
+  }
+  .sn-br {
+    bottom: 0;
+    right: 0;
+    border-left: 0;
+    border-top: 0;
+    border-bottom-right-radius: 3px;
+  }
+
+  .sn-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    background: #74b295;
+    box-shadow: 0 0 12px 1px rgba(116, 178, 149, 0.7);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sn-line {
+      animation: sn-scan 2.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes sn-scan {
+    0% {
+      transform: translateY(-64px);
+      opacity: 0.2;
+    }
+    50% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(64px);
+      opacity: 0.2;
+    }
+  }
+
+  .sn-hint {
+    font-size: 12.5px;
+    color: #9a9a9a;
+    max-width: 180px;
+    text-align: center;
+    margin-top: 26px;
+  }
+
+  .sn-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 18px 20px;
+  }
+
+  .sn-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 13px;
+    color: #eee;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  /* ---- copy cards ---- */
+
+  .sn-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  .sn-card {
+    border: 1px solid var(--color-casebound-border);
+    border-radius: 16px;
+    padding: 20px;
+    background: var(--color-casebound-paper);
+  }
+
+  .sn-cardicon {
+    display: inline-flex;
+    color: var(--color-casebound-green);
+    margin-bottom: 12px;
+  }
+
+  .sn-cardtitle {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  .sn-cardbody {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--color-casebound-muted);
+    margin: 0;
+  }
+
+  .sn-card-wide {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border-color: var(--color-casebound-border-strong);
+    background: var(--color-casebound-gold-tint);
+  }
+
+  .sn-widetile {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: var(--color-casebound-gold);
+    color: #fff;
+    flex: none;
+  }
+
+  .sn-cardbody-wide {
+    color: #6e5c40;
+  }
+
+  @media (max-width: 1023px) {
+    .cb-scan {
+      padding: 72px 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-scan {
+      padding: 56px 20px;
+    }
+    .sn-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

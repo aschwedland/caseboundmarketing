@@ -1,11 +1,66 @@
 ---
+/**
+ * Minimal header for the prose pages (/privacy, /terms, /delete-account, /404).
+ *
+ * These deliberately do NOT get the landing page's full Nav: its links are
+ * in-page section anchors ("#pricing", "#faq") that resolve to nothing here.
+ * A wordmark back to home is the honest affordance. Restyled to match the new
+ * design's wordmark.
+ */
 ---
 
-<header class="px-6 py-4">
-  <div class="max-w-4xl mx-auto">
-    <a href="/" class="inline-flex items-center gap-2 text-casebound-green hover:opacity-80 transition-opacity">
-      <img src="/icon.png" width="32" height="32" alt="" class="rounded-[22%]" />
-      <span class="font-serif font-semibold text-lg">Casebound</span>
+<header class="ph-header">
+  <div class="ph-inner">
+    <a href="/" class="ph-wordmark" aria-label="Casebound home">
+      <span class="ph-mark" aria-hidden="true">C</span>
+      <span class="ph-name">Casebound</span>
     </a>
   </div>
 </header>
+
+<style>
+  .ph-header {
+    padding: 22px 32px;
+    border-bottom: 1px solid var(--color-casebound-border);
+  }
+
+  .ph-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .ph-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+  }
+
+  .ph-mark {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--color-casebound-green);
+    color: var(--color-casebound-gold-wordmark);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .ph-name {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    color: var(--color-casebound-dark-green);
+  }
+
+  @media (max-width: 767px) {
+    .ph-header {
+      padding: 18px 20px;
+    }
+  }
+</style>

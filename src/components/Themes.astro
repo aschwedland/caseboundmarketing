@@ -1,0 +1,492 @@
+---
+import Phone from './Phone.astro';
+import Cover from './Cover.astro';
+import Icon from './Icon.astro';
+import { COVERS } from '../config/site';
+
+/**
+ * The three themes match the app exactly (src/lib/theme.ts: 'light' | 'dark' |
+ * 'sepia'), and Sepia really is Pro-gated — src/app/appearance.tsx shows its
+ * own PRO pill and routes to the paywall.
+ *
+ * Every colored property on the mockup reads from a custom property on the
+ * screen element, so switching themes is 16 variable writes plus a transition,
+ * not a re-render.
+ */
+
+const THEMES = {
+  light: {
+    bg: '#FAF6EE', surface: '#FFFFFF', s2: '#F2ECE0', border: '#E7DFD0',
+    bstrong: '#D9CFBC', text: '#2B2620', t2: '#6E6557', t3: '#A39A8A',
+    primary: '#2E5D45', ppress: '#234A37', onp: '#FFFFFF', ptint: '#E3EDE5',
+    ptintt: '#234A37', gold: '#8A6A1F', goldtint: '#F3E8CE', bezel: '#241F18',
+  },
+  dark: {
+    bg: '#16130F', surface: '#211D16', s2: '#2A251C', border: '#383229',
+    bstrong: '#4A4338', text: '#F3EEE3', t2: '#B9AF9E', t3: '#847B6C',
+    primary: '#74B295', ppress: '#5E9A7E', onp: '#112017', ptint: '#233A2E',
+    ptintt: '#A6D7BC', gold: '#E6C879', goldtint: '#3A3320', bezel: '#0C0A08',
+  },
+  sepia: {
+    bg: '#F4EAD0', surface: '#FAF1DA', s2: '#EBDFBE', border: '#DBC9A0',
+    bstrong: '#C7B181', text: '#3A2E1F', t2: '#6E5C40', t3: '#9A876B',
+    primary: '#2E5D45', ppress: '#234A37', onp: '#FFFFFF', ptint: '#DDE5D6',
+    ptintt: '#234A37', gold: '#8A6A1F', goldtint: '#E8D9AB', bezel: '#2A2114',
+  },
+} as const;
+
+const options = [
+  { key: 'light', name: 'Light', desc: 'Warm paper — bright and calm', sw: ['#FAF6EE', '#2E5D45'], pro: false },
+  { key: 'dark', name: 'Dark', desc: 'Lightened, not inverted — easy at night', sw: ['#16130F', '#74B295'], pro: false },
+  { key: 'sepia', name: 'Sepia', desc: 'Warm sand — built for long reading', sw: ['#F4EAD0', '#2E5D45'], pro: true },
+] as const;
+
+const books = [
+  { cover: COVERS.nameOfTheWind, badge: 'Reading', finished: false },
+  { cover: COVERS.circe, badge: 'Reading', finished: false },
+  { cover: COVERS.projectHailMary, badge: 'Finished', finished: true },
+];
+
+const tabs = [
+  { icon: 'library', label: 'Library', active: true },
+  { icon: 'barChart', label: 'Stats', active: false },
+  { icon: 'plus', label: 'Add', active: false },
+  { icon: 'list', label: 'Lists', active: false },
+  { icon: 'settings', label: 'Settings', active: false },
+] as const;
+
+// Server-render in Light so the section is correct with no JS.
+const light = THEMES.light;
+const initialVars = Object.entries(light)
+  .filter(([k]) => k !== 'bezel')
+  .map(([k, v]) => `--${k}:${v}`)
+  .join(';');
+---
+
+<section id="themes" class="cb-themes">
+  <div class="cb-themes-inner">
+    <header class="cb-header cb-themes-header">
+      <p class="cb-eyebrow" data-reveal>Themes</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">
+        Read your way,<br />in any light.
+      </h2>
+      <p class="cb-lede" data-reveal style="--reveal-delay:100ms">
+        Warm paper by day, easy dark by night, and a Pro sepia built for the
+        long haul. Tap a theme — watch it change.
+      </p>
+    </header>
+
+    <div class="cb-themes-grid">
+      <div class="th-options" data-reveal>
+        {
+          options.map((o, i) => (
+            <button
+              type="button"
+              class="th-opt"
+              data-theme={o.key}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              <span
+                class="th-swatch"
+                aria-hidden="true"
+                style={`background:linear-gradient(135deg, ${o.sw[0]} 50%, ${o.sw[1]} 50%)`}
+              />
+              <span class="th-opttext">
+                <span class="th-optname">
+                  {o.name}
+                  {o.pro && <span class="th-pro">Pro</span>}
+                </span>
+                <span class="th-optdesc">{o.desc}</span>
+              </span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="th-phonewrap" data-reveal style="--reveal-delay:80ms">
+        <Phone
+          width={288}
+          screenHeight={560}
+          bezelId="cb-theme-bezel"
+          screenId="cb-theme-screen"
+          screenBg="var(--bg)"
+          style={initialVars}
+          label="Casebound library screen previewing the selected theme — light, dark or sepia."
+        >
+          <div class="tp">
+            <div class="tp-statusbar">
+              <span>9:41</span>
+              <span class="tp-statusright">
+                <span class="tp-dots"></span>
+                <span class="tp-batt"></span>
+              </span>
+            </div>
+
+            <div class="tp-titlerow">
+              <span class="tp-title">Library</span>
+              <span class="tp-icons">
+                <Icon name="search" size={16} stroke={2} />
+                <Icon name="filter" size={16} stroke={2} />
+              </span>
+            </div>
+
+            <div class="tp-rows">
+              {
+                books.map((b, i) => (
+                  <div class={`tp-row ${i === books.length - 1 ? 'tp-row-last' : ''}`}>
+                    <Cover cover={b.cover} width={40} height={60} radius={5} />
+                    <div class="tp-rowtext">
+                      <div class="tp-booktitle">{b.cover.title}</div>
+                      <div class="tp-author">{b.cover.author}</div>
+                      <span class={b.finished ? 'tp-badge tp-badge-gold' : 'tp-badge'}>
+                        {b.badge}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="tp-tabbar">
+              {
+                tabs.map((t) => (
+                  <span class={t.active ? 'tp-tab tp-tab-on' : 'tp-tab'}>
+                    <Icon name={t.icon} size={17} stroke={t.active ? 2.2 : 1.9} />
+                    {t.label}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        </Phone>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline id="cb-theme-data" type="application/json" set:html={JSON.stringify(THEMES)} />
+
+<style>
+  .cb-themes {
+    background: var(--color-casebound-paper);
+    padding: 108px 32px;
+  }
+
+  .cb-themes-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .cb-themes-header {
+    max-width: 620px;
+    margin-bottom: 54px;
+  }
+
+  .cb-themes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    max-width: 900px;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .th-options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .th-opt {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    border: 2px solid var(--color-casebound-border);
+    background: var(--color-casebound-surface);
+    color: var(--color-casebound-muted);
+    border-radius: 16px;
+    padding: 16px 18px;
+    font: inherit;
+    cursor: pointer;
+    transition:
+      border-color 0.25s ease,
+      background 0.25s ease,
+      color 0.25s ease;
+  }
+
+  .th-opt[aria-pressed='true'] {
+    border-color: var(--color-casebound-green);
+    background: var(--color-casebound-green-tint);
+    color: var(--color-casebound-dark-green);
+  }
+
+  .th-swatch {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    flex: none;
+    box-shadow: 0 0 0 1px rgba(43, 38, 32, 0.12);
+    transition: box-shadow 0.25s ease;
+  }
+
+  .th-opt[aria-pressed='true'] .th-swatch {
+    box-shadow: 0 0 0 2px var(--color-casebound-green);
+  }
+
+  .th-opttext {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .th-optname {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-casebound-text);
+  }
+
+  .th-opt[aria-pressed='true'] .th-optname {
+    color: var(--color-casebound-dark-green);
+  }
+
+  .th-pro {
+    background: var(--color-casebound-gold-tint);
+    color: var(--color-casebound-gold);
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+
+  .th-optdesc {
+    font-size: 13.5px;
+  }
+
+  /* ---- themed screen ---- */
+
+  .tp {
+    height: 100%;
+    position: relative;
+    background: var(--bg);
+    transition: background 0.4s ease;
+  }
+
+  .tp-statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    transition: color 0.4s ease;
+  }
+
+  .tp-statusright {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .tp-dots {
+    width: 24px;
+    height: 6px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  .tp-batt {
+    width: 14px;
+    height: 8px;
+    border: 1.4px solid currentColor;
+    border-radius: 2.5px;
+    opacity: 0.7;
+  }
+
+  .tp-titlerow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px 14px;
+  }
+
+  .tp-title {
+    font-family: var(--font-serif);
+    font-size: 23px;
+    font-weight: 600;
+    color: var(--text);
+    transition: color 0.4s ease;
+  }
+
+  .tp-icons {
+    display: flex;
+    gap: 13px;
+    color: var(--t2);
+    transition: color 0.4s ease;
+  }
+
+  .tp-rows {
+    padding: 0 18px;
+  }
+
+  .tp-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.4s ease;
+  }
+
+  .tp-row-last {
+    border-bottom: none;
+  }
+
+  .tp-rowtext {
+    min-width: 0;
+  }
+
+  .tp-booktitle {
+    font-family: var(--font-serif);
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.15;
+    transition: color 0.4s ease;
+  }
+
+  .tp-author {
+    font-size: 12px;
+    color: var(--t2);
+    margin-top: 3px;
+    transition: color 0.4s ease;
+  }
+
+  .tp-badge {
+    display: inline-block;
+    margin-top: 7px;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: var(--ptint);
+    color: var(--ptintt);
+    transition:
+      background 0.4s ease,
+      color 0.4s ease;
+  }
+
+  .tp-badge-gold {
+    background: var(--goldtint);
+    color: var(--gold);
+  }
+
+  .tp-tabbar {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 10px 12px 18px;
+    transition:
+      background 0.4s ease,
+      border-color 0.4s ease;
+  }
+
+  .tp-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 9.5px;
+    color: var(--t3);
+    transition: color 0.4s ease;
+  }
+
+  .tp-tab-on {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tp,
+    .tp *,
+    .th-opt,
+    .th-swatch {
+      transition: none !important;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .cb-themes {
+      padding: 72px 24px;
+    }
+    .cb-themes-grid {
+      gap: 40px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-themes {
+      padding: 56px 20px;
+    }
+    .cb-themes-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    /* Buttons above the phone, full width. */
+    .th-options {
+      order: 1;
+    }
+    .th-phonewrap {
+      order: 2;
+    }
+  }
+</style>
+
+<script>
+  type Vars = Record<string, string>;
+
+  const dataEl = document.getElementById('cb-theme-data');
+  const screen = document.getElementById('cb-theme-screen');
+  const bezel = document.getElementById('cb-theme-bezel');
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.th-opt[data-theme]'),
+  );
+
+  if (dataEl && screen && bezel && buttons.length) {
+    const themes: Record<string, Vars> = JSON.parse(dataEl.textContent || '{}');
+
+    const select = (key: string) => {
+      const vars = themes[key];
+      if (!vars) return;
+
+      for (const [name, value] of Object.entries(vars)) {
+        if (name === 'bezel') {
+          bezel.style.background = value;
+        } else {
+          screen.style.setProperty(`--${name}`, value);
+        }
+      }
+
+      buttons.forEach((b) => {
+        b.setAttribute('aria-pressed', String(b.dataset.theme === key));
+      });
+    };
+
+    buttons.forEach((b) => {
+      b.addEventListener('click', () => select(b.dataset.theme || 'light'));
+    });
+  }
+</script>

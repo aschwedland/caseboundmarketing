@@ -1,0 +1,450 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Phone from './Phone.astro';
+import Icon from './Icon.astro';
+import { COVERS } from '../config/site';
+
+/**
+ * The randomizer *cycles* deterministically rather than randomizing, so a
+ * repeat click always shows something new. The picks are exposed to the client
+ * script as JSON, and the first one is rendered server-side so the section is
+ * complete without JS.
+ */
+const picks = [
+  { key: 'projectHailMary', meta: '496 pages · paperback · on your TBR' },
+  { key: 'piranesi', meta: '272 pages · hardcover · on your TBR' },
+  { key: 'leftHandOfDarkness', meta: '304 pages · ebook · on your TBR' },
+  { key: 'babel', meta: '560 pages · hardcover · on your TBR' },
+  { key: 'klaraAndTheSun', meta: '320 pages · paperback · on your TBR' },
+] as const;
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/covers/*.png',
+  { eager: true },
+);
+
+// Resolve a built WebP URL for each pick so the client swap doesn't need a
+// hardcoded hashed filename.
+//
+// This MUST go through getImage(). Reading `.default.src` off the imported
+// asset yields the raw source PNG, which bypasses the whole image pipeline —
+// the five covers together are ~305KB of PNG against ~15KB as WebP, and the
+// script below preloads four of them on every page load whether or not the
+// visitor ever scrolls to this section.
+const pickData = await Promise.all(
+  picks.map(async (p) => {
+    const cover = COVERS[p.key];
+    const optimized = await getImage({
+      src: images[`../assets/covers/${cover.slug}.png`]!.default,
+      width: 264,
+      height: 396,
+      format: 'webp',
+    });
+    return {
+      title: cover.title,
+      author: cover.author,
+      meta: p.meta,
+      fallback: cover.fallback,
+      src: optimized.src,
+    };
+  }),
+);
+
+const first = COVERS[picks[0].key];
+---
+
+<section id="randomizer" class="cb-rand">
+  <div class="cb-split cb-rand-inner">
+    <div class="cb-split-copy">
+      <p class="cb-eyebrow" data-reveal>Surprise me</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">
+        Never stuck on<br />what's next.
+      </h2>
+      <p class="cb-lede" data-reveal style="--reveal-delay:100ms">
+        Can't decide? Let the randomizer pick from your own shelves — filtered
+        your way. No algorithm deciding for you, just your TBR, shuffled.
+      </p>
+
+      <div class="rz-callout" data-reveal style="--reveal-delay:140ms">
+        <span class="rz-callout-tile"><Icon name="shuffle" size={17} stroke={2} /></span>
+        <p class="rz-callout-text">
+          <strong>This one's live.</strong><br />
+          Tap <strong>Reshuffle</strong> on the phone →
+        </p>
+      </div>
+    </div>
+
+    <div class="cb-split-phone" data-reveal style="--reveal-delay:80ms">
+      <Phone
+        width={298}
+        screenHeight={600}
+        interactive
+        label="Interactive Casebound Surprise me screen — press Reshuffle to cycle through books on the to-be-read list."
+      >
+        <div class="rz">
+          <div class="rz-head" aria-hidden="true">
+            <Icon name="x" size={18} stroke={2} />
+            <span class="rz-headtitle">
+              <span style="color:#8A6A1F"><Icon name="sparkles" size={15} filled /></span>
+              Surprise me
+            </span>
+            <span style="width:18px"></span>
+          </div>
+
+          <div class="rz-chips" aria-hidden="true">
+            <span class="rz-chip rz-chip-on">From TBR</span>
+            <span class="rz-chip">Any format</span>
+            <span class="rz-chip">Under 400 pp</span>
+          </div>
+
+          <div class="rz-center">
+            <p class="rz-kicker" aria-hidden="true">Your next read</p>
+            <div id="cb-rand-inner" class="rz-inner">
+              <div
+                id="cb-rand-cover"
+                class="rz-cover"
+                style={`background:${first.fallback}`}
+                aria-hidden="true"
+              >
+                <Image
+                  src={images[`../assets/covers/${first.slug}.png`]!.default}
+                  alt=""
+                  width={264}
+                  height={396}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <p id="cb-rand-title" class="rz-title">{first.title}</p>
+              <p id="cb-rand-author" class="rz-author">{first.author}</p>
+              <p id="cb-rand-meta" class="rz-meta">{picks[0].meta}</p>
+            </div>
+            <p class="sr-only" aria-live="polite" id="cb-rand-live"></p>
+          </div>
+
+          <div class="rz-actions">
+            <button type="button" id="cb-reshuffle" class="rz-btn">
+              <Icon name="shuffle" size={14} stroke={2.2} />Reshuffle
+            </button>
+            <span class="rz-btn rz-btn-static" aria-hidden="true">
+              <Icon name="x" size={14} stroke={2.2} />Skip
+            </span>
+          </div>
+
+          <div class="rz-start" aria-hidden="true">
+            <Icon name="book" size={14} stroke={2} />Start reading
+          </div>
+        </div>
+      </Phone>
+    </div>
+  </div>
+</section>
+
+<script
+  is:inline
+  type="application/json"
+  id="cb-rand-data"
+  set:html={JSON.stringify(pickData)}
+/>
+
+<style>
+  .cb-rand {
+    background: var(--color-casebound-wallpaper);
+    padding: 108px 32px;
+  }
+
+  .cb-rand-inner {
+    max-width: 1140px;
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+
+  .rz-callout {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--color-casebound-surface);
+    border: 1px solid var(--color-casebound-border-strong);
+    border-radius: 14px;
+    padding: 14px 20px;
+    box-shadow: 0 8px 24px -14px rgba(43, 38, 32, 0.3);
+    margin-top: 30px;
+  }
+
+  .rz-callout-tile {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--color-casebound-green-tint);
+    color: var(--color-casebound-dark-green);
+    flex: none;
+  }
+
+  .rz-callout-text {
+    font-size: 14.5px;
+    line-height: 1.45;
+    margin: 0;
+    color: var(--color-casebound-muted);
+  }
+
+  .rz-callout-text strong {
+    color: var(--color-casebound-text);
+    font-weight: 600;
+  }
+
+  /* ---- surprise-me screen ---- */
+
+  .rz {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 18px 18px 20px;
+  }
+
+  .rz-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #6e6557;
+  }
+
+  .rz-headtitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: #2b2620;
+  }
+
+  .rz-chips {
+    display: flex;
+    gap: 7px;
+    margin-top: 16px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .rz-chip {
+    background: #fff;
+    border: 1px solid #e7dfd0;
+    color: #6e6557;
+    padding: 6px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .rz-chip-on {
+    background: #2e5d45;
+    border-color: #2e5d45;
+    color: #fff;
+  }
+
+  .rz-center {
+    margin: auto 0;
+    text-align: center;
+  }
+
+  .rz-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #a39a8a;
+    margin: 0 0 16px;
+  }
+
+  .rz-inner {
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .rz-inner.is-swapping {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  .rz-cover {
+    width: 132px;
+    height: 198px;
+    border-radius: 8px;
+    margin: 0 auto 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 34px -12px rgba(43, 38, 32, 0.4);
+  }
+
+  .rz-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rz-title {
+    font-family: var(--font-serif);
+    font-size: 21px;
+    font-weight: 600;
+    color: #2b2620;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .rz-author {
+    font-size: 14px;
+    color: #6e6557;
+    margin: 6px 0 0;
+  }
+
+  .rz-meta {
+    font-size: 12.5px;
+    color: #a39a8a;
+    margin: 6px 0 0;
+  }
+
+  .rz-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .rz-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: #fff;
+    border: 1px solid #d9cfbc;
+    border-radius: 12px;
+    padding: 12px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2b2620;
+    /* 44px minimum tap target. */
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  .rz-btn-static {
+    color: #6e6557;
+    cursor: default;
+  }
+
+  .rz-start {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #2e5d45;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 10px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rz-inner {
+      transition: none;
+    }
+    .rz-inner.is-swapping {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .cb-rand {
+      padding: 72px 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-rand {
+      padding: 56px 20px;
+    }
+  }
+</style>
+
+<script>
+  interface Pick {
+    title: string;
+    author: string;
+    meta: string;
+    fallback: string;
+    src: string;
+  }
+
+  const dataEl = document.getElementById('cb-rand-data');
+  const btn = document.getElementById('cb-reshuffle');
+  const inner = document.getElementById('cb-rand-inner');
+  const coverEl = document.getElementById('cb-rand-cover');
+  const titleEl = document.getElementById('cb-rand-title');
+  const authorEl = document.getElementById('cb-rand-author');
+  const metaEl = document.getElementById('cb-rand-meta');
+  const liveEl = document.getElementById('cb-rand-live');
+
+  if (dataEl && btn && inner && coverEl && titleEl && authorEl && metaEl && liveEl) {
+    const picks: Pick[] = JSON.parse(dataEl.textContent || '[]');
+    const img = coverEl.querySelector('img');
+    let index = 0;
+
+    // Preload the other covers so a swap never shows an empty colored box.
+    picks.slice(1).forEach((p) => {
+      const pre = new Image();
+      pre.src = p.src;
+    });
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const apply = (p: Pick) => {
+      coverEl.style.background = p.fallback;
+      if (img) {
+        img.src = p.src;
+      }
+      titleEl.textContent = p.title;
+      authorEl.textContent = p.author;
+      metaEl.textContent = p.meta;
+      liveEl.textContent = `${p.title} by ${p.author}. ${p.meta}.`;
+    };
+
+    // A second click inside the 190ms fade would otherwise let the first
+    // timeout clear `is-swapping` and the second snap in with no transition.
+    // Restarting the timer keeps every click a clean fade.
+    let swapTimer: number | undefined;
+
+    btn.addEventListener('click', () => {
+      index = (index + 1) % picks.length;
+      const next = picks[index];
+
+      if (reduced) {
+        apply(next);
+        return;
+      }
+
+      window.clearTimeout(swapTimer);
+      inner.classList.add('is-swapping');
+      swapTimer = window.setTimeout(() => {
+        apply(next);
+        inner.classList.remove('is-swapping');
+      }, 190);
+    });
+  }
+</script>

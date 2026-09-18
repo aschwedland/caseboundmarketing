@@ -1,0 +1,493 @@
+---
+import Phone from './Phone.astro';
+import Cover from './Cover.astro';
+import Icon from './Icon.astro';
+import { COVERS } from '../config/site';
+
+/**
+ * COPY CORRECTION (see CONTENT-CHANGES.md): the approved lede ended
+ * "...never reduced to a book count or a streak to protect."
+ *
+ * Both halves had to go. Casebound ships a streak system
+ * (`profiles.current_streak_cache` / `longest_streak` / `streak_requires_goal`,
+ * surfaced on the home tab, stats, badges and log-session), AND a yearly
+ * book-count goal (`reading_goals.book_goal`, a Settings row, and
+ * src/app/yearly-goal-stats.tsx). Claiming reading is "never reduced to a book
+ * count" would contradict the app — and contradict this page's own FAQ, which
+ * discloses the yearly goal a few sections further down.
+ *
+ * The honest version keeps the point the section is actually making: the
+ * numbers on this screen are pages and hours.
+ */
+
+const bars = [
+  { day: 'M', height: 44, color: '#3A5347' },
+  { day: 'T', height: 70, color: '#4E7A63' },
+  { day: 'W', height: 30, color: '#3A5347' },
+  { day: 'T', height: 88, color: '#74B295' },
+  { day: 'F', height: 52, color: '#4E7A63' },
+  { day: 'S', height: 100, color: '#E6C879', accent: true },
+  { day: 'S', height: 64, color: '#4E7A63' },
+];
+---
+
+<section id="stats" class="cb-stats on-dark">
+  <div class="cb-stats-glow" aria-hidden="true"></div>
+
+  <div class="cb-stats-inner">
+    <header class="cb-header cb-stats-header">
+      <p class="cb-eyebrow" data-reveal>Sessions &amp; Stats</p>
+      <h2 class="cb-h2 cb-stats-h2" data-reveal style="--reveal-delay:60ms">
+        Numbers that<br />actually mean something.
+      </h2>
+      <p class="cb-lede" data-reveal style="--reveal-delay:100ms">
+        Time a session, log one you forgot, and watch pages and hours add up —
+        measured in the units you actually read in, not rounded off into a
+        number to protect.
+      </p>
+    </header>
+
+    <div class="cb-stats-grid">
+      <div class="cb-stats-phone" data-reveal>
+        <Phone
+          width={284}
+          screenHeight={566}
+          bezel="#0C0A08"
+          screenBg="#16130F"
+          shadow="0 34px 70px -20px rgba(0,0,0,.6)"
+          label="Casebound reading-session screen: a live timer showing 42 minutes 15 seconds elapsed on The Name of the Wind, with pause and stop controls and a card asking what page you reached."
+        >
+          <div class="rs">
+            <p class="rs-kicker">Reading session</p>
+
+            <div class="rs-book">
+              <Cover cover={COVERS.nameOfTheWind} width={40} height={56} radius={4} />
+              <div>
+                <div class="rs-booktitle">The Name of the Wind</div>
+                <div class="rs-bookmeta">Hardcover · page 213</div>
+              </div>
+            </div>
+
+            <p class="rs-elapsed">Elapsed</p>
+            <div id="cb-timer" class="rs-timer tabular" data-timer-start="2535">42:15</div>
+
+            <div class="rs-controls">
+              <span class="rs-btn rs-btn-primary"><Icon name="pause" size={22} filled /></span>
+              <span class="rs-btn rs-btn-ghost"><Icon name="stop" size={18} filled /></span>
+            </div>
+
+            <div class="rs-finish">
+              <div class="rs-finish-title">When you finish</div>
+              <div class="rs-finish-sub">What page did you reach?</div>
+              <div class="rs-input">
+                <span class="rs-input-val tabular">221</span>
+                <span class="rs-input-of">of 662</span>
+              </div>
+              <div class="rs-finish-note">8 pages this session · ~14 min / 100 pages</div>
+            </div>
+          </div>
+        </Phone>
+      </div>
+
+      <div class="cb-stats-cards">
+        <div class="sc sc-1" data-reveal style="--reveal-delay:60ms">
+          <div>
+            <p class="sc-label">Pages read · this year</p>
+            <div class="sc-big tabular" data-count="18240">18,240</div>
+          </div>
+          <div class="sc-metrics">
+            <div><span class="sc-num tabular" data-count="214" data-suffix="h">214h</span> logged</div>
+            <div><span class="sc-num tabular" data-count="41" data-suffix=" pp/h">41 pp/h</span> pace</div>
+            <div><span class="sc-num tabular" data-count="63">63</span> sessions</div>
+          </div>
+        </div>
+
+        <div class="sc sc-2" data-reveal style="--reveal-delay:100ms">
+          <div class="sc-2head">
+            <p class="sc-label">This week</p>
+            <p class="sc-week tabular">4h 20m · 312 pages</p>
+          </div>
+          <div
+            class="sc-chart"
+            role="img"
+            aria-label="Reading this week by day: Monday light, Tuesday moderate, Wednesday lightest, Thursday heavy, Friday moderate, Saturday the highest, Sunday moderate."
+          >
+            <div class="sc-bars" aria-hidden="true">
+              {
+                bars.map((b) => (
+                  <span
+                    class="sc-bar"
+                    style={`height:${b.height}%;background:${b.color}`}
+                  />
+                ))
+              }
+            </div>
+            <div class="sc-days" aria-hidden="true">
+              {
+                bars.map((b) => (
+                  <span class={b.accent ? 'sc-day sc-day-on' : 'sc-day'}>{b.day}</span>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="sc sc-3" data-reveal style="--reveal-delay:140ms">
+          <span class="sc-3icon"><Icon name="sun" size={18} stroke={2} /></span>
+          <p class="sc-3text">
+            You read most consistently before bed on weekdays — a neutral
+            pattern, not a scoreboard.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cb-stats {
+    position: relative;
+    background: var(--color-casebound-ink);
+    color: var(--color-casebound-ink-text);
+    padding: 110px 32px;
+    overflow: hidden;
+  }
+
+  .cb-stats-glow {
+    position: absolute;
+    top: -140px;
+    left: 50%;
+    translate: -50% 0;
+    width: 760px;
+    height: 520px;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(116, 178, 149, 0.14), transparent 66%);
+  }
+
+  .cb-stats-inner {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .cb-stats-header {
+    max-width: 640px;
+    margin-bottom: 62px;
+  }
+
+  .cb-stats-h2 {
+    font-size: clamp(34px, 4.4vw, 58px);
+    line-height: 1.04;
+    letter-spacing: -0.5px;
+  }
+
+  .cb-stats-grid {
+    display: grid;
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: 44px;
+    align-items: start;
+  }
+
+  .cb-stats-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* ---- session screen ---- */
+
+  .rs {
+    padding: 18px;
+    height: 100%;
+    position: relative;
+  }
+
+  .rs-kicker {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-casebound-ink-muted);
+    margin: 0 0 22px;
+  }
+
+  .rs-book {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rs-booktitle {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .rs-bookmeta {
+    font-size: 12px;
+    color: var(--color-casebound-ink-faint);
+    margin-top: 4px;
+  }
+
+  .rs-elapsed {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--color-casebound-ink-faint);
+    text-align: center;
+    margin: 40px 0 10px;
+  }
+
+  .rs-timer {
+    text-align: center;
+    font-weight: 700;
+    font-size: 60px;
+    letter-spacing: 1px;
+    line-height: 1;
+    color: var(--color-casebound-ink-text);
+  }
+
+  .rs-controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .rs-btn {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+
+  .rs-btn-primary {
+    background: var(--color-casebound-mint);
+    color: #112017;
+  }
+
+  .rs-btn-ghost {
+    border: 1.5px solid var(--color-casebound-ink-border);
+    color: var(--color-casebound-ink-muted);
+  }
+
+  .rs-finish {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    background: var(--color-casebound-ink-2);
+    border: 1px solid var(--color-casebound-ink-border);
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .rs-finish-title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .rs-finish-sub {
+    font-size: 12px;
+    color: var(--color-casebound-ink-faint);
+    margin-top: 3px;
+  }
+
+  .rs-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #2a251c;
+    border-radius: 9px;
+    padding: 10px 12px;
+    margin: 11px 0 9px;
+  }
+
+  .rs-input-val {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .rs-input-of {
+    font-size: 12.5px;
+    color: var(--color-casebound-ink-faint);
+  }
+
+  .rs-finish-note {
+    font-size: 11.5px;
+    color: var(--color-casebound-ink-faint);
+  }
+
+  /* ---- stat cards ---- */
+
+  .sc {
+    background: var(--color-casebound-ink-2);
+    border: 1px solid var(--color-casebound-ink-border);
+    border-radius: 20px;
+  }
+
+  .sc-1 {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 30px 32px;
+  }
+
+  .sc-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-casebound-ink-faint);
+    margin: 0;
+  }
+
+  .sc-big {
+    font-weight: 700;
+    font-size: clamp(48px, 6vw, 76px);
+    line-height: 0.95;
+    color: var(--color-casebound-mint);
+    margin-top: 10px;
+  }
+
+  .sc-metrics {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--color-casebound-ink-muted);
+    text-align: right;
+  }
+
+  .sc-num {
+    color: var(--color-casebound-ink-text);
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .sc-2 {
+    padding: 26px 30px;
+  }
+
+  .sc-2head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .sc-week {
+    font-size: 14px;
+    color: var(--color-casebound-ink-muted);
+    margin: 0;
+  }
+
+  .sc-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 120px;
+  }
+
+  .sc-bar {
+    flex: 1;
+    border-radius: 6px;
+    min-height: 4px;
+  }
+
+  .sc-days {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .sc-day {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: var(--color-casebound-ink-faint);
+  }
+
+  .sc-day-on {
+    color: var(--color-casebound-gold-bright);
+    font-weight: 600;
+  }
+
+  .sc-3 {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--color-casebound-ink-3);
+    border-color: #2a251c;
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+
+  .sc-3icon {
+    color: var(--color-casebound-gold-bright);
+    flex: none;
+    line-height: 0;
+    margin-top: 2px;
+  }
+
+  .sc-3text {
+    font-size: 13.5px;
+    color: var(--color-casebound-ink-muted);
+    margin: 0;
+  }
+
+  /* ---- responsive ---- */
+
+  @media (max-width: 1023px) {
+    .cb-stats {
+      padding: 72px 24px;
+    }
+    .cb-stats-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    /* Phone drops below the cards, matching every other split section. */
+    .cb-stats-phone {
+      order: 2;
+    }
+    .cb-stats-cards {
+      order: 1;
+    }
+    .cb-stats-header {
+      margin-bottom: 44px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-stats {
+      padding: 56px 20px;
+    }
+    .sc-1 {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 22px 20px;
+    }
+    .sc-metrics {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      font-size: 13px;
+      margin-top: 18px;
+    }
+    .sc-2 {
+      padding: 22px 20px;
+    }
+    .sc-bars {
+      height: 88px;
+      gap: 8px;
+    }
+    .sc-days {
+      gap: 8px;
+    }
+    .rs-timer {
+      font-size: 54px;
+    }
+  }
+</style>

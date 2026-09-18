@@ -1,41 +1,244 @@
 @import "tailwindcss";
 
-@theme {
-  --color-casebound-green: #2E5D45;
-  --color-casebound-dark-green: #1E4231;
-  --color-casebound-gold: #C8954B;
-  --color-casebound-paper: #F5EFE0;
-  --color-casebound-wallpaper: #EDE5D3;
-  --color-casebound-text: #2A2520;
-  --color-casebound-muted: #6B635A;
-  --color-casebound-border: #E5DDD0;
+/* ---------------------------------------------------------------------------
+   Casebound theme tokens.
 
-  --font-family-serif: 'Lora', Georgia, 'Times New Roman', serif;
-  --font-family-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+   The palette is intentionally light-only. The page's rhythm depends on two
+   fixed dark bands (#stats and the final CTA) reading as *dark sections on a
+   warm page* — honoring OS dark mode would inverse the page around them and
+   destroy that contrast. The in-page theme switcher on #themes is a product
+   demo: it recolors a phone mockup, not the site.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Core surfaces */
+  --color-casebound-paper: #FAF6EE;
+  --color-casebound-wallpaper: #F2ECE0;
+  --color-casebound-surface: #FFFFFF;
+
+  /* Brand */
+  --color-casebound-green: #2E5D45;
+  --color-casebound-dark-green: #234A37;
+  --color-casebound-gold: #8A6A1F;
+  /* Wordmark-only gold — the deep bronze above is for text on light. */
+  --color-casebound-gold-wordmark: #C79A4B;
+
+  /* Text */
+  --color-casebound-text: #2B2620;
+  --color-casebound-muted: #6E6557;
+  --color-casebound-faint: #A39A8A;
+  /* Accessible variant of --faint, for fine print that carries meaning.
+     #A39A8A on paper is ~2.4:1 and is decorative-only. */
+  --color-casebound-faint-strong: #8A8172;
+
+  /* Lines */
+  --color-casebound-border: #E7DFD0;
+  --color-casebound-border-strong: #D9CFBC;
+
+  /* Tints */
+  --color-casebound-green-tint: #E3EDE5;
+  --color-casebound-gold-tint: #F3E8CE;
+  --color-casebound-gold-bright: #E6C879;
+
+  /* Dark section palette */
+  --color-casebound-ink: #16130F;
+  --color-casebound-ink-2: #211D16;
+  --color-casebound-ink-3: #1C1811;
+  --color-casebound-ink-border: #383229;
+  --color-casebound-ink-text: #F3EEE3;
+  --color-casebound-ink-muted: #B9AF9E;
+  --color-casebound-ink-faint: #847B6C;
+
+  --color-casebound-mint: #74B295;
+  --color-casebound-forest: #1E4130;
+  --color-casebound-bezel: #241F18;
+
+  /* Book-spine accents — cover fallbacks and the decorative shelf */
+  --color-spine-rust: #A8492C;
+  --color-spine-steel: #3E5F79;
+  --color-spine-ochre: #9A6B1E;
+  --color-spine-slate: #5B6B82;
+  --color-spine-clay: #7A4A2B;
+  --color-spine-plum: #7A4A6B;
+
+  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Hanken Grotesk Variable', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-casebound-paper: #1A1410;
-    --color-casebound-wallpaper: #221C17;
-    --color-casebound-green: #74B295;
-    --color-casebound-dark-green: #5A9478;
-    --color-casebound-text: #E8DFC8;
-    --color-casebound-muted: #A89880;
-    --color-casebound-border: #3A3028;
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+html {
+  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 body {
   background-color: var(--color-casebound-paper);
   color: var(--color-casebound-text);
-  font-family: var(--font-family-sans);
+  font-family: var(--font-sans);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
-@media (max-width: 640px) {
-  body {
-    font-size: 16px;
+::selection {
+  background: var(--color-casebound-green);
+  color: #fff;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Tabular numerals for every figure that animates or aligns. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   Focus
+
+   Visible on every interactive element. Dark sections opt into the gold ring
+   by carrying `.on-dark`, since the green ring disappears against #16130F.
+--------------------------------------------------------------------------- */
+
+:where(a, button, summary, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-casebound-green);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.on-dark :where(a, button, summary, input, [tabindex]):focus-visible {
+  outline-color: var(--color-casebound-gold-bright);
+}
+
+/* ---------------------------------------------------------------------------
+   Section primitives
+
+   Shared because every section repeats the same eyebrow / h2 / lede trio, and
+   Astro's scoped styles would otherwise duplicate the rules 11 times.
+--------------------------------------------------------------------------- */
+
+.cb-section {
+  padding: 104px 32px;
+}
+
+.cb-eyebrow {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--color-casebound-gold);
+  margin: 0 0 14px;
+}
+
+.on-dark .cb-eyebrow {
+  color: var(--color-casebound-gold-bright);
+}
+
+.cb-h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(32px, 3.6vw, 50px);
+  line-height: 1.05;
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+
+.cb-lede {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--color-casebound-muted);
+  margin: 20px 0 0;
+}
+
+.on-dark .cb-lede {
+  color: var(--color-casebound-ink-muted);
+}
+
+/* Centered header block used by #stats, #architecture, #themes, #who,
+   #pricing and #faq. */
+.cb-header {
+  text-align: center;
+  margin-inline: auto;
+  margin-bottom: 60px;
+}
+
+@media (max-width: 1023px) {
+  .cb-section {
+    padding: 72px 24px;
+  }
+  .cb-header {
+    margin-bottom: 44px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cb-section {
+    padding: 56px 20px;
+  }
+  .cb-lede {
+    font-size: 16.5px;
+  }
+}
+
+/* Two-column section body. Below 1024px it stacks and the phone always drops
+   below the copy, regardless of which side it sits on at desktop. */
+.cb-split {
+  display: grid;
+  gap: 64px;
+  align-items: center;
+  margin-inline: auto;
+}
+
+@media (max-width: 1023px) {
+  .cb-split {
+    grid-template-columns: 1fr !important;
+    gap: 48px;
+  }
+  .cb-split > .cb-split-phone {
+    order: 2;
+  }
+  .cb-split > .cb-split-copy {
+    order: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .cb-split {
+    gap: 32px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveals
+
+   Content ships visible. `reveal.ts` adds `data-reveal-ready` to the root only
+   when IntersectionObserver exists AND motion is allowed, which is what arms
+   the hidden state. A no-JS visitor, a throttled background tab, or a
+   reduced-motion visitor therefore sees fully rendered content — never a blank
+   page waiting on an observer that will not fire.
+--------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal-ready] [data-reveal] {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal-ready] [data-reveal].is-revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

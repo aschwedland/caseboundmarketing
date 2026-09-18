@@ -1,0 +1,124 @@
+---
+/**
+ * Phone mockup shell: bezel + screen, with responsive scaling.
+ *
+ * The mockups are authored at fixed pixel sizes and are NOT rebuilt per
+ * breakpoint. The whole unit is scaled with `transform: scale()`, and the
+ * wrapper reserves the *scaled* box so surrounding layout never jumps.
+ *
+ * Accessibility: each mockup is a single decorative illustration of product
+ * UI. The wrapper carries `role="img"` plus a description, and everything
+ * inside is `aria-hidden` — otherwise a screen reader reads out dozens of
+ * meaningless UI fragments ("9:41", "●●●●", every chip label).
+ */
+
+interface Props {
+  /** Bezel width in px, as authored. */
+  width: number;
+  /** Screen height in px, as authored (bezel adds 11px padding all round). */
+  screenHeight: number;
+  label: string;
+  bezel?: string;
+  screenBg?: string;
+  radius?: number;
+  screenRadius?: number;
+  shadow?: string;
+  class?: string;
+  style?: string;
+  /** Applied to the screen element — used by the theme switcher. */
+  screenId?: string;
+  bezelId?: string;
+  /**
+   * Set when the mockup contains a real focusable control (the randomizer's
+   * Reshuffle button). `role="img"` with `aria-hidden` internals would bury
+   * that control from assistive tech and put a focusable element inside an
+   * aria-hidden subtree, which is invalid. Interactive mockups become a
+   * labelled `group` instead, and the caller marks its own decorative parts.
+   */
+  interactive?: boolean;
+}
+
+const {
+  width,
+  screenHeight,
+  label,
+  bezel = '#241F18',
+  screenBg = '#FAF6EE',
+  radius = 42,
+  screenRadius = 32,
+  shadow = '0 34px 70px -22px rgba(43,38,32,.42)',
+  class: className = '',
+  style = '',
+  screenId,
+  bezelId,
+  interactive = false,
+} = Astro.props;
+
+const BEZEL_PAD = 11;
+const totalHeight = screenHeight + BEZEL_PAD * 2;
+
+const wrapperA11y = interactive
+  ? { role: 'group' as const, 'aria-label': label }
+  : { role: 'img' as const, 'aria-label': label };
+---
+
+<div
+  class={`cb-phone-wrap ${className}`}
+  style={`--pw:${width}px;--ph:${totalHeight}px;${style}`}
+  {...wrapperA11y}
+>
+  <div class="cb-phone" id={bezelId} style={`background:${bezel};border-radius:${radius}px;box-shadow:${shadow}`}>
+    <div
+      class="cb-screen"
+      id={screenId}
+      style={`background:${screenBg};border-radius:${screenRadius}px;height:${screenHeight}px`}
+      aria-hidden={interactive ? undefined : 'true'}
+    >
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .cb-phone-wrap {
+    --scale: 1;
+    position: relative;
+    width: calc(var(--pw) * var(--scale));
+    height: calc(var(--ph) * var(--scale));
+    margin-inline: auto;
+    flex: none;
+  }
+
+  .cb-phone {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: var(--pw);
+    padding: 11px;
+    transform: translateX(-50%) scale(var(--scale));
+    transform-origin: top center;
+  }
+
+  .cb-screen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (max-width: 1023px) {
+    .cb-phone-wrap {
+      --scale: 0.86;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-phone-wrap {
+      --scale: 0.82;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .cb-phone-wrap {
+      --scale: 0.72;
+    }
+  }
+</style>

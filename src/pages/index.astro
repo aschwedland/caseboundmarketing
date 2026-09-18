@@ -1,28 +1,59 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
-import Differentiator from '../components/Differentiator.astro';
-import FeatureCards from '../components/FeatureCards.astro';
-import ScreenshotShowcase from '../components/ScreenshotShowcase.astro';
+import Formats from '../components/Formats.astro';
+import Stats from '../components/Stats.astro';
+import Architecture from '../components/Architecture.astro';
+import Randomizer from '../components/Randomizer.astro';
+import Scan from '../components/Scan.astro';
+import Themes from '../components/Themes.astro';
+import Screenshots from '../components/Screenshots.astro';
 import WhoItsFor from '../components/WhoItsFor.astro';
 import Pricing from '../components/Pricing.astro';
 import FAQ from '../components/FAQ.astro';
+import FinalCTA from '../components/FinalCTA.astro';
 import Footer from '../components/Footer.astro';
+import { FAQS } from '../config/faq';
+
+const description =
+  'A book tracker for people with real libraries. Honest reading data and a real catalog of every format on your shelf — print, ebook, and audio, each counted right.';
+
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
-  title="Casebound — track what you read, catalog what you own"
-  description="A book tracker built for serious readers and library builders. Real reading data, a real catalog. Coming to iOS and Android."
+  title="Casebound — Track what you read. Catalog what you own."
+  description={description}
   canonicalUrl="https://casebound.co/"
+  jsonLd={[faqPage]}
 >
-  <main>
+  <Nav />
+  <main id="main">
     <Hero />
-    <Differentiator />
-    <FeatureCards />
-    <ScreenshotShowcase />
+    <Formats />
+    <Stats />
+    <Architecture />
+    <Randomizer />
+    <Scan />
+    <Themes />
+    <Screenshots />
     <WhoItsFor />
     <Pricing />
     <FAQ />
+    <FinalCTA />
   </main>
   <Footer />
 </BaseLayout>
+
+<script>
+  import '../scripts/motion.ts';
+</script>

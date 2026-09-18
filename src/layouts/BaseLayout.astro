@@ -2,7 +2,18 @@
 import '@fontsource/lora/400.css';
 import '@fontsource/lora/500.css';
 import '@fontsource/lora/600.css';
+import '@fontsource/lora/400-italic.css';
+import '@fontsource/lora/500-italic.css';
+import '@fontsource-variable/hanken-grotesk';
 import '../styles/global.css';
+import { LAUNCH } from '../config/site';
+
+// Preload the two faces that render above the fold. Without these the font
+// files are only discovered after the bundled stylesheet parses, costing an
+// extra round trip on the LCP heading. Both are latin subsets — the rest of
+// each family stays lazily fetched via their unicode-range rules.
+import loraLatin from '@fontsource/lora/files/lora-latin-600-normal.woff2?url';
+import hankenLatin from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -10,6 +21,8 @@ interface Props {
   canonicalUrl: string;
   ogImage?: string;
   ogType?: string;
+  /** Extra JSON-LD nodes (e.g. the FAQPage graph on the landing page). */
+  jsonLd?: Record<string, unknown>[];
 }
 
 const {
@@ -18,7 +31,58 @@ const {
   canonicalUrl,
   ogImage = 'https://casebound.co/og-image.png',
   ogType = 'website',
+  jsonLd = [],
 } = Astro.props;
+
+/**
+ * SoftwareApplication describes the product itself, so it belongs on every
+ * page. `operatingSystem` tracks the real launch state — it lists only stores
+ * the app can actually be downloaded from, which keeps the structured data
+ * honest while iOS is still in review.
+ */
+const platforms = [
+  LAUNCH.android.live ? 'Android' : null,
+  LAUNCH.ios.live ? 'iOS' : null,
+].filter(Boolean);
+
+const softwareApplication = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Casebound',
+  applicationCategory: 'LifestyleApplication',
+  applicationSubCategory: 'Book tracker',
+  operatingSystem: platforms.length ? platforms.join(', ') : 'iOS, Android',
+  description,
+  url: 'https://casebound.co/',
+  image: ogImage,
+  ...(LAUNCH.android.live ? { downloadUrl: LAUNCH.android.url } : {}),
+  offers: [
+    {
+      '@type': 'Offer',
+      name: 'Free',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Casebound Pro (annual)',
+      price: '29.99',
+      priceCurrency: 'USD',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Casebound Pro (monthly)',
+      price: '4.99',
+      priceCurrency: 'USD',
+    },
+  ],
+  publisher: {
+    '@type': 'Organization',
+    name: 'Pixel Master Technologies LLC',
+  },
+};
+
+const graph = [softwareApplication, ...jsonLd];
 ---
 
 <!doctype html>
@@ -26,17 +90,59 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="preload" as="font" type="font/woff2" href={loraLatin} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={hankenLatin} crossorigin />
+
+    {/* Arms the scroll-reveal hidden state before first paint. motion.ts is a
+        deferred module, so leaving the arming to it means the hero paints
+        visible, blanks, then fades back in. Inline and blocking is the only
+        way to get ahead of that. Conditions kept in lockstep with motion.ts.
+
+        The watchdog is the important half: arming here means the hidden state
+        exists before the script that reveals it. If motion.ts never runs — a
+        failed chunk fetch, a parse error, an ad blocker — the page would stay
+        permanently blank, which is precisely the failure this design is
+        supposed to be immune to. So if nothing has claimed the boot within
+        3 seconds, the hidden state is dropped and everything renders. */}
+    <script is:inline>
+      (function () {
+        try {
+          if (
+            !('IntersectionObserver' in window) ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            return;
+          }
+          var root = document.documentElement;
+          root.setAttribute('data-reveal-ready', '');
+          setTimeout(function () {
+            if (!root.hasAttribute('data-motion-booted')) {
+              root.removeAttribute('data-reveal-ready');
+            }
+          }, 3000);
+        } catch (e) {
+          /* Leave content visible if anything here throws. */
+        }
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
+    <meta property="og:site_name" content="Casebound" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content={ogType} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="theme-color" content="#FAF6EE" />
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -44,6 +150,16 @@ const {
 
     <!-- Sitemap -->
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {
+      graph.map((node) => (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(node)}
+        />
+      ))
+    }
 
     <!-- ANALYTICS: Wire PostHog here when ready.
          <script>
@@ -54,7 +170,7 @@ const {
          </script>
          No other changes needed. -->
   </head>
-  <body class="text-[17px]">
+  <body>
     <slot />
   </body>
 </html>
