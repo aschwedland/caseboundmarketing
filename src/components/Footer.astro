@@ -1,26 +1,203 @@
 ---
+import { SUPPORT_EMAIL, LEGAL_ENTITY } from '../config/site';
+
+/**
+ * MERGE NOTE: the new design's footer dropped three things the current site
+ * carries, all of which are kept here —
+ *   • the "Delete account" link. Both app stores require a publicly reachable
+ *     account-deletion path, so this is not optional.
+ *   • the support contact address.
+ *   • the Pixel Master Technologies LLC attribution.
+ *
+ * Section links are absolute ("/#pricing") rather than bare fragments, because
+ * this footer also renders on /privacy, /terms, /delete-account and /404,
+ * where "#pricing" would resolve to nothing.
+ */
+
+const year = new Date().getFullYear();
+
+const product = [
+  { label: 'Features', href: '/#formats' },
+  { label: 'Themes', href: '/#themes' },
+  { label: 'Pricing', href: '/#pricing' },
+];
+
+const company = [
+  // FAQ sits under Company per the design spec's footer section, not Product.
+  { label: 'FAQ', href: '/#faq' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
+  { label: 'Delete account', href: '/delete-account' },
+  { label: 'Contact', href: `mailto:${SUPPORT_EMAIL}` },
+];
 ---
 
-<footer class="bg-casebound-dark-green text-casebound-paper py-12 px-6">
-  <div class="max-w-4xl mx-auto">
-    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:justify-between">
-      <!-- Wordmark -->
-      <div class="flex items-center gap-3">
-        <img src="/icon.png" width="40" height="40" alt="" class="rounded-[22%]" />
-        <span class="font-serif font-semibold text-xl">Casebound</span>
-      </div>
-
-      <!-- Links -->
-      <nav class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm" aria-label="Footer">
-        <a href="/privacy" class="hover:underline underline-offset-4">Privacy</a>
-        <a href="/terms" class="hover:underline underline-offset-4">Terms</a>
-        <a href="/delete-account" class="hover:underline underline-offset-4">Delete account</a>
-        <a href="mailto:support@pixel-master.com" class="hover:underline underline-offset-4">Contact</a>
-      </nav>
+<footer class="cb-footer on-dark">
+  <div class="cb-footer-inner">
+    <div class="ft-brand">
+      <a href="/" class="ft-wordmark" aria-label="Casebound home">
+        <span class="ft-mark" aria-hidden="true">C</span>
+        <span class="ft-name">Casebound</span>
+      </a>
+      <p class="ft-blurb">
+        A book tracker built for serious readers and library builders. Track
+        what you read. Catalog what you own.
+      </p>
     </div>
 
-    <p class="text-center sm:text-left text-xs mt-8 opacity-70">
-      Casebound is a product of Pixel Master Technologies LLC. &copy; 2026.
+    <div class="ft-cols">
+      <nav class="ft-col" aria-label="Product">
+        <h2 class="ft-collabel">Product</h2>
+        <ul>
+          {product.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav class="ft-col" aria-label="Company">
+        <h2 class="ft-collabel">Company</h2>
+        <ul>
+          {company.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="cb-footer-bottom">
+    <p>
+      &copy; {year} Casebound. A product of {LEGAL_ENTITY}. All rights reserved.
     </p>
+    <p>Made for people who love their shelves.</p>
   </div>
 </footer>
+
+<style>
+  .cb-footer {
+    background: var(--color-casebound-ink);
+    color: var(--color-casebound-ink-muted);
+    padding: 56px 32px 40px;
+  }
+
+  .cb-footer-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .ft-brand {
+    max-width: 300px;
+  }
+
+  .ft-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+  }
+
+  .ft-mark {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--color-casebound-green);
+    color: var(--color-casebound-gold-wordmark);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .ft-name {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    color: var(--color-casebound-ink-text);
+  }
+
+  .ft-blurb {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-casebound-ink-faint);
+    margin: 16px 0 0;
+  }
+
+  .ft-cols {
+    display: flex;
+    gap: 56px;
+  }
+
+  .ft-collabel {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--color-casebound-ink-faint);
+    margin: 0 0 14px;
+  }
+
+  .ft-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ft-col a {
+    display: inline-flex;
+    align-items: center;
+    /* 44px minimum tap target. */
+    min-height: 44px;
+    font-size: 14.5px;
+    color: var(--color-casebound-ink-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .ft-col a:hover {
+    color: var(--color-casebound-ink-text);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .cb-footer-bottom {
+    max-width: 1240px;
+    margin: 40px auto 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--color-casebound-ink-border);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-casebound-ink-faint);
+  }
+
+  .cb-footer-bottom p {
+    margin: 0;
+  }
+
+  @media (max-width: 767px) {
+    .cb-footer {
+      padding: 44px 20px 32px;
+    }
+    .cb-footer-inner {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .ft-cols {
+      gap: 40px;
+    }
+    .cb-footer-bottom {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+</style>

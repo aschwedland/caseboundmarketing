@@ -1,46 +1,500 @@
 ---
+import Phone from './Phone.astro';
+import Cover from './Cover.astro';
+import Icon from './Icon.astro';
+import StoreBadges from './StoreBadges.astro';
+import { COVERS, availabilityLine } from '../config/site';
+
+/**
+ * COPY CORRECTION (see CONTENT-CHANGES.md): the approved fine print read
+ * "Free to start · No account needed · iOS & Android". Casebound requires an
+ * account — src/app/_layout.tsx gates first run through
+ * `slides → account-setup (auth) → goal-setup → notif-primer → home` and
+ * redirects to sign-in when there is no session. "No account needed" is
+ * dropped, and availability now reflects the real split launch.
+ */
+const finePrint = `Free to start · ${availabilityLine()}`;
+
+const books = [
+  {
+    cover: COVERS.nameOfTheWind,
+    badge: { text: 'Reading', bg: '#E3EDE5', fg: '#234A37' },
+    formats: ['print', 'audio'] as const,
+  },
+  {
+    cover: COVERS.circe,
+    badge: { text: 'Reading', bg: '#E3EDE5', fg: '#234A37' },
+    formats: ['print'] as const,
+  },
+  {
+    cover: COVERS.projectHailMary,
+    badge: { text: 'Finished', bg: '#F3E8CE', fg: '#8A6A1F' },
+    formats: ['audio'] as const,
+  },
+  {
+    cover: COVERS.dune,
+    badge: { text: 'Want to read', bg: '#F2ECE0', fg: '#6E6557' },
+    formats: ['print'] as const,
+  },
+];
+
+const chips = ['All', 'Reading', 'Owned', 'TBR'];
+const tabs = [
+  { icon: 'library', label: 'Library', active: true },
+  { icon: 'barChart', label: 'Stats', active: false },
+  { icon: 'list', label: 'Lists', active: false },
+  { icon: 'settings', label: 'Settings', active: false },
+] as const;
 ---
 
-<section class="bg-casebound-paper px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
-  <div class="max-w-2xl mx-auto text-center">
-    <!-- App icon -->
-    <img
-      src="/icon.png"
-      width="112"
-      height="112"
-      alt="Casebound app icon"
-      class="mx-auto mb-8 rounded-[22%]"
-    />
+<section id="top" class="cb-hero">
+  <div class="cb-hero-glow cb-hero-glow-1" aria-hidden="true"></div>
+  <div class="cb-hero-glow cb-hero-glow-2" aria-hidden="true"></div>
 
-    <!-- Wordmark -->
-    <h1 class="font-serif font-semibold text-5xl sm:text-[56px] mb-4 leading-tight">
-      Casebound
-    </h1>
+  <div class="cb-hero-inner">
+    <div class="cb-hero-copy">
+      <p class="cb-pill" data-reveal>
+        <span class="cb-pill-dot" aria-hidden="true"></span>
+        A book tracker for people with real libraries
+      </p>
 
-    <!-- Tagline -->
-    <p class="font-serif font-medium text-xl sm:text-2xl text-casebound-muted mb-6">
-      Track what you read. Catalog what you own.
-    </p>
+      <h1 data-reveal style="--reveal-delay:60ms">
+        Track what<br />you read.<br />
+        <span class="cb-h1-accent">Catalog what<br />you own.</span>
+      </h1>
 
-    <!-- Sub-description -->
-    <p class="text-base sm:text-[17px] text-casebound-text max-w-lg mx-auto mb-10 leading-relaxed">
-      A book tracker built for serious readers and library builders. Two things, done properly: real reading data, and a real catalog of what's on your shelf.
-    </p>
+      <p class="cb-hero-lede" data-reveal style="--reveal-delay:120ms">
+        Two things, done properly: honest reading data, and a real catalog of
+        every format on your shelf — print, ebook, and audio, each counted
+        right.
+      </p>
 
-    <!-- CTA -->
-    <!-- EMAIL CAPTURE: Replace this mailto with a real form or ConvertKit embed
-         when launch email collection is ready. The mailto is intentionally simple
-         for the pre-launch period. -->
-    <a
-      href="mailto:support@pixel-master.com?subject=Casebound%20launch%20notify&body=Notify%20me%20when%20Casebound%20is%20ready"
-      class="inline-block bg-casebound-green text-casebound-paper px-8 py-3.5 rounded-lg font-medium text-lg hover:opacity-90 transition-opacity"
-    >
-      Notify me when it's ready
-    </a>
+      <div data-reveal style="--reveal-delay:180ms">
+        <StoreBadges variant="hero" class="cb-hero-badges" />
+      </div>
 
-    <!-- Platform note -->
-    <p class="text-sm text-casebound-muted mt-4">
-      Coming to iOS and Android.
-    </p>
+      <p class="cb-hero-fine" data-reveal style="--reveal-delay:220ms">
+        {finePrint}
+      </p>
+    </div>
+
+    <div class="cb-hero-stage">
+      <div class="cb-float cb-float-a" data-parallax="-0.05" aria-hidden="true">
+        <Cover cover={COVERS.dune} width={118} height={176} radius={7} loading="eager" />
+      </div>
+      <div class="cb-float cb-float-b" data-parallax="0.06" aria-hidden="true">
+        <Cover cover={COVERS.projectHailMary} width={112} height={168} radius={7} loading="eager" />
+      </div>
+
+      <div class="cb-hero-phone" data-parallax="0.03">
+        <Phone
+          width={308}
+          screenHeight={624}
+          radius={44}
+          screenRadius={34}
+          screenBg="#FAF6EE"
+          shadow="0 40px 80px -20px rgba(43,38,32,.5), 0 0 0 1px rgba(43,38,32,.15)"
+          label="Casebound library screen: four books — The Name of the Wind, Circe, Project Hail Mary and Dune — each showing a reading-status badge and icons for the formats owned."
+        >
+          <div class="ph-statusbar">
+            <span>9:41</span>
+            <span class="ph-statusbar-right">
+              <span class="ph-dots"></span>
+              <span class="ph-batt"></span>
+            </span>
+          </div>
+
+          <div class="ph-titlerow">
+            <span class="ph-title">Library</span>
+            <span class="ph-titleicons">
+              <Icon name="search" size={17} stroke={2} />
+              <Icon name="filter" size={17} stroke={2} />
+            </span>
+          </div>
+
+          <div class="ph-chips">
+            {
+              chips.map((c, i) => (
+                <span class={i === 0 ? 'ph-chip ph-chip-on' : 'ph-chip'}>{c}</span>
+              ))
+            }
+          </div>
+
+          <div class="ph-rows">
+            {
+              books.map((b, i) => (
+                <div class={`ph-row ${i === books.length - 1 ? 'ph-row-last' : ''}`}>
+                  <Cover cover={b.cover} width={42} height={63} radius={5} loading="eager" />
+                  <div class="ph-rowtext">
+                    <div class="ph-booktitle">{b.cover.title}</div>
+                    <div class="ph-author">{b.cover.author}</div>
+                    <div class="ph-meta">
+                      <span
+                        class="ph-badge"
+                        style={`background:${b.badge.bg};color:${b.badge.fg}`}
+                      >
+                        {b.badge.text}
+                      </span>
+                      {b.formats.map((f) => (
+                        <span class={f === 'print' ? 'ph-fmt-print' : 'ph-fmt-audio'} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+
+          <div class="ph-tabbar">
+            {
+              tabs.slice(0, 2).map((t) => (
+                <span class={t.active ? 'ph-tab ph-tab-on' : 'ph-tab'}>
+                  <Icon name={t.icon} size={18} stroke={t.active ? 2.2 : 1.9} />
+                  {t.label}
+                </span>
+              ))
+            }
+            <span class="ph-tab ph-tab-add">
+              <span class="ph-addbtn"><Icon name="plus" size={22} stroke={2.4} /></span>
+            </span>
+            {
+              tabs.slice(2).map((t) => (
+                <span class="ph-tab">
+                  <Icon name={t.icon} size={18} stroke={1.9} />
+                  {t.label}
+                </span>
+              ))
+            }
+          </div>
+        </Phone>
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+  .cb-hero {
+    position: relative;
+    padding: 150px 32px 60px;
+    overflow: hidden;
+  }
+
+  .cb-hero-glow {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+  }
+  .cb-hero-glow-1 {
+    top: 120px;
+    right: -120px;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(46, 93, 69, 0.1), transparent 68%);
+  }
+  .cb-hero-glow-2 {
+    top: 340px;
+    left: -140px;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(138, 106, 31, 0.1), transparent 68%);
+  }
+
+  .cb-hero-inner {
+    position: relative;
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .cb-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--color-casebound-green-tint);
+    color: var(--color-casebound-dark-green);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    margin-bottom: 26px;
+  }
+
+  .cb-pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-casebound-green);
+    flex: none;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(44px, 5.4vw, 74px);
+    line-height: 1.02;
+    letter-spacing: -0.5px;
+    margin: 0;
+  }
+
+  .cb-h1-accent {
+    color: var(--color-casebound-green);
+  }
+
+  .cb-hero-lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--color-casebound-muted);
+    max-width: 460px;
+    margin: 24px 0 30px;
+  }
+
+  .cb-hero-fine {
+    font-size: 13.5px;
+    color: var(--color-casebound-faint-strong);
+    margin: 18px 0 0;
+  }
+
+  .cb-hero-stage {
+    position: relative;
+    min-height: 640px;
+    display: grid;
+    place-items: center;
+  }
+
+  .cb-float {
+    position: absolute;
+    z-index: 1;
+    box-shadow: 0 22px 40px rgba(43, 38, 32, 0.24);
+    border-radius: 7px;
+  }
+  .cb-float-a {
+    top: 60px;
+    left: 0;
+    transform: rotate(-9deg);
+  }
+  .cb-float-b {
+    bottom: 70px;
+    right: -6px;
+    transform: rotate(8deg);
+  }
+
+  .cb-hero-phone {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cb-hero-phone {
+      animation: cb-bob 7s ease-in-out infinite;
+    }
+  }
+
+  /* The bob owns `transform` so the parallax script can own `translate`
+     independently — the two compose without either having to know about the
+     other, and the rotated covers keep their rotation for the same reason. */
+  @keyframes cb-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-16px);
+    }
+  }
+
+  /* ---- phone screen internals ---- */
+
+  .ph-statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2b2620;
+  }
+  .ph-statusbar-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .ph-dots {
+    width: 26px;
+    height: 7px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.75;
+  }
+  .ph-batt {
+    width: 15px;
+    height: 8px;
+    border: 1.4px solid currentColor;
+    border-radius: 2.5px;
+    opacity: 0.75;
+  }
+
+  .ph-titlerow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 20px 12px;
+  }
+  .ph-title {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 600;
+    color: #2b2620;
+  }
+  .ph-titleicons {
+    display: flex;
+    gap: 14px;
+    color: #6e6557;
+  }
+
+  .ph-chips {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .ph-chip {
+    background: #fff;
+    border: 1px solid #e7dfd0;
+    color: #6e6557;
+    padding: 6px 13px;
+    border-radius: 999px;
+  }
+  .ph-chip-on {
+    background: #2e5d45;
+    border-color: #2e5d45;
+    color: #fff;
+  }
+
+  .ph-rows {
+    padding: 0 20px;
+  }
+  .ph-row {
+    display: flex;
+    gap: 13px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e7dfd0;
+  }
+  .ph-row-last {
+    border-bottom: none;
+  }
+  .ph-rowtext {
+    min-width: 0;
+  }
+  .ph-booktitle {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 600;
+    color: #2b2620;
+    line-height: 1.15;
+  }
+  .ph-author {
+    font-size: 12.5px;
+    color: #6e6557;
+    margin-top: 2px;
+  }
+  .ph-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 7px;
+  }
+  .ph-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+  .ph-fmt-print {
+    width: 12px;
+    height: 14px;
+    border: 1.5px solid #a39a8a;
+    border-radius: 2px;
+    flex: none;
+  }
+  .ph-fmt-audio {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid #a39a8a;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .ph-tabbar {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #fff;
+    border-top: 1px solid #e7dfd0;
+    padding: 12px 18px 20px;
+  }
+  .ph-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: #a39a8a;
+  }
+  .ph-tab-on {
+    color: #2e5d45;
+    font-weight: 600;
+  }
+  .ph-tab-add {
+    margin-top: -8px;
+  }
+  .ph-addbtn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #2e5d45;
+    color: #fff;
+  }
+
+  /* ---- responsive ---- */
+
+  @media (max-width: 1023px) {
+    .cb-hero {
+      padding: 118px 24px 56px;
+    }
+    .cb-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .cb-hero-copy {
+      text-align: center;
+    }
+    .cb-hero-lede {
+      margin-inline: auto;
+    }
+    .cb-hero-inner :global(.cb-hero-badges) {
+      justify-content: center;
+    }
+    .cb-hero-stage {
+      min-height: 0;
+    }
+    /* The floating covers overflow a single-column stage. */
+    .cb-float {
+      display: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-hero {
+      padding: 104px 20px 48px;
+    }
+  }
+</style>

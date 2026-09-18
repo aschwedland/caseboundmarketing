@@ -1,50 +1,183 @@
 ---
+import Icon from './Icon.astro';
+
+const builtFor = [
+  'Readers with substantial libraries — often 100 books or more.',
+  'People who want to be good stewards of what they own.',
+  'Anyone who wants meaningful reading data without performance theater.',
+];
+
+const notBuiltFor = [
+  'Casual readers chasing yearly book-count goals.',
+  'Review writers chasing social validation.',
+  'People who want an algorithm to decide what they read next.',
+];
 ---
 
-<section class="bg-casebound-wallpaper px-6 py-16 sm:py-24">
-  <div class="max-w-4xl mx-auto">
-    <h2 class="font-serif font-medium text-2xl sm:text-[32px] mb-10 leading-snug">
-      Built for serious readers
-    </h2>
+<section id="who" class="cb-who">
+  <div class="cb-who-inner">
+    <header class="cb-header">
+      <p class="cb-eyebrow" data-reveal>Who it's for</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">
+        Not for everyone.<br />On purpose.
+      </h2>
+    </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Built for -->
-      <div class="bg-casebound-green/5 border border-casebound-green/20 rounded-xl p-6 sm:p-8">
-        <h3 class="font-serif font-medium text-lg mb-4 text-casebound-green">Built for</h3>
-        <ul class="space-y-3 text-[15px] sm:text-base leading-relaxed">
-          <li class="flex gap-3">
-            <span class="text-casebound-green shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>
-            <span>Readers with substantial libraries &mdash; often 100 books or more.</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="text-casebound-green shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>
-            <span>People who care about being a good steward of what they own.</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="text-casebound-green shrink-0 mt-0.5" aria-hidden="true">&#10003;</span>
-            <span>Anyone who wants meaningful reading data without performance theater.</span>
-          </li>
+    <div class="wh-grid">
+      <div class="wh-card wh-card-for" data-reveal style="--reveal-delay:100ms">
+        <span class="wh-tile wh-tile-for"><Icon name="check" size={18} stroke={2.8} /></span>
+        <h3 class="wh-title wh-title-for">Built for</h3>
+        <ul class="wh-list">
+          {
+            builtFor.map((item) => (
+              <li>
+                <span class="wh-bullet wh-bullet-for" aria-hidden="true">
+                  <Icon name="check" size={15} stroke={2.6} />
+                </span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
         </ul>
       </div>
 
-      <!-- Not built for -->
-      <div class="bg-casebound-paper border border-casebound-border rounded-xl p-6 sm:p-8">
-        <h3 class="font-serif font-medium text-lg mb-4 text-casebound-muted">Not built for</h3>
-        <ul class="space-y-3 text-[15px] sm:text-base leading-relaxed text-casebound-muted">
-          <li class="flex gap-3">
-            <span class="shrink-0 mt-0.5" aria-hidden="true">&#10007;</span>
-            <span>Casual readers chasing yearly book-count goals.</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="shrink-0 mt-0.5" aria-hidden="true">&#10007;</span>
-            <span>Review writers chasing social validation.</span>
-          </li>
-          <li class="flex gap-3">
-            <span class="shrink-0 mt-0.5" aria-hidden="true">&#10007;</span>
-            <span>People who want algorithmic recommendations to tell them what to read next.</span>
-          </li>
+      <div class="wh-card wh-card-not" data-reveal style="--reveal-delay:140ms">
+        <span class="wh-tile wh-tile-not"><Icon name="x" size={18} stroke={2.8} /></span>
+        <h3 class="wh-title wh-title-not">Not built for</h3>
+        <ul class="wh-list wh-list-not">
+          {
+            notBuiltFor.map((item) => (
+              <li>
+                <span class="wh-bullet wh-bullet-not" aria-hidden="true">
+                  <Icon name="x" size={15} stroke={2.6} />
+                </span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .cb-who {
+    background: var(--color-casebound-surface);
+    border-top: 1px solid var(--color-casebound-border);
+    padding: 104px 32px;
+  }
+
+  .cb-who-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .wh-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+
+  .wh-card {
+    border-radius: 20px;
+    padding: 32px 30px;
+  }
+
+  .wh-card-for {
+    background: var(--color-casebound-green-tint);
+    border: 1px solid rgba(46, 93, 69, 0.2);
+  }
+
+  .wh-card-not {
+    background: var(--color-casebound-paper);
+    border: 1px solid var(--color-casebound-border);
+  }
+
+  .wh-tile {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    margin-bottom: 14px;
+  }
+
+  .wh-tile-for {
+    background: var(--color-casebound-green);
+    color: #fff;
+  }
+
+  .wh-tile-not {
+    background: var(--color-casebound-border);
+    color: var(--color-casebound-muted);
+  }
+
+  .wh-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+
+  .wh-title-for {
+    color: var(--color-casebound-dark-green);
+  }
+
+  .wh-title-not {
+    color: var(--color-casebound-muted);
+  }
+
+  .wh-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--color-casebound-text);
+  }
+
+  .wh-list-not {
+    color: var(--color-casebound-muted);
+  }
+
+  .wh-list li {
+    display: flex;
+    gap: 11px;
+  }
+
+  .wh-bullet {
+    flex: none;
+    line-height: 0;
+    margin-top: 3px;
+  }
+
+  .wh-bullet-for {
+    color: var(--color-casebound-green);
+  }
+
+  .wh-bullet-not {
+    color: var(--color-casebound-faint-strong);
+  }
+
+  @media (max-width: 1023px) {
+    .cb-who {
+      padding: 72px 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-who {
+      padding: 56px 20px;
+    }
+    .wh-grid {
+      grid-template-columns: 1fr;
+    }
+    .wh-card {
+      padding: 26px 22px;
+    }
+  }
+</style>

@@ -1,0 +1,467 @@
+---
+import StoreBadges from './StoreBadges.astro';
+import Icon from './Icon.astro';
+import {
+  LAUNCH,
+  BOTH_LIVE,
+  NEITHER_LIVE,
+  NOTIFY_ENDPOINT,
+  SUPPORT_EMAIL,
+} from '../config/site';
+
+/**
+ * COPY CORRECTIONS (see CONTENT-CHANGES.md):
+ *
+ * - The pill read "Coming soon to iOS & Android". Android shipped, so the pill
+ *   and lede are now generated from LAUNCH.
+ * - The fine print read "No account required". Casebound requires an account;
+ *   replaced with a claim that is true.
+ *
+ * The design promised an email notification with no field to type into. This
+ * adds the field. It posts to booktrackerapi's unauthenticated /notify
+ * endpoint, which stores the address and emails support@ — see
+ * booktrackerapi/app/notify.py.
+ */
+
+const pillCopy = BOTH_LIVE
+  ? 'Out now on iOS & Android'
+  : NEITHER_LIVE
+    ? 'Coming soon to iOS & Android'
+    : LAUNCH.android.live
+      ? 'Out now on Android · iOS coming soon'
+      : 'Out now on iOS · Android coming soon';
+
+const lede = BOTH_LIVE
+  ? 'Casebound is available on both stores today. Download it and start cataloging.'
+  : NEITHER_LIVE
+    ? 'Be first in line. We’ll let you know the moment Casebound lands on your platform.'
+    : LAUNCH.android.live
+      ? 'Android readers can start today. If you’re on iPhone, leave your email and we’ll tell you the moment Casebound lands on the App Store.'
+      : 'iOS readers can start today. If you’re on Android, leave your email and we’ll tell you the moment Casebound lands on Google Play.';
+
+const shelf = [
+  { h: 74, c: '#2E5D45' },
+  { h: 88, c: '#A8492C' },
+  { h: 64, c: '#8A6A1F' },
+  { h: 96, c: '#3E5F79' },
+  { h: 70, c: '#5B6B82' },
+  { h: 84, c: '#7A4A2B' },
+  { h: 60, c: '#234A37' },
+  { h: 90, c: '#9A6B1E' },
+];
+---
+
+<section id="get" class="cb-cta on-dark">
+  <div class="cb-cta-glow" aria-hidden="true"></div>
+
+  <div class="cb-cta-inner">
+    <p class="ct-pill" data-reveal>
+      <span class="ct-dot" aria-hidden="true"></span>
+      {pillCopy}
+    </p>
+
+    <h2 class="ct-h2" data-reveal style="--reveal-delay:60ms">
+      Your reading life,<br />finally in one place.
+    </h2>
+
+    <p class="ct-lede" data-reveal style="--reveal-delay:100ms">{lede}</p>
+
+    {
+      !BOTH_LIVE && (
+        <form id="notify" class="ct-form" data-reveal style="--reveal-delay:140ms" novalidate>
+          <div class="ct-fieldrow">
+            <label class="sr-only" for="notify-email">Email address</label>
+            <input
+              id="notify-email"
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              required
+              placeholder="you@example.com"
+              class="ct-input"
+            />
+
+            {/* Honeypot: hidden from people, irresistible to naive bots.
+                aria-hidden + tabindex keep it away from assistive tech. */}
+            <div class="ct-hp" aria-hidden="true">
+              <label for="notify-website">Leave this field empty</label>
+              <input id="notify-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <button type="submit" class="ct-submit">
+              Notify me
+              <Icon name="arrowRight" size={16} stroke={2.2} />
+            </button>
+          </div>
+
+          <p class="ct-status" id="notify-status" role="status" aria-live="polite"></p>
+
+          <noscript>
+            <p class="ct-noscript">
+              This form needs JavaScript. Email{' '}
+              <a href={`mailto:${SUPPORT_EMAIL}?subject=Notify%20me%20about%20Casebound`}>
+                {SUPPORT_EMAIL}
+              </a>{' '}
+              and we’ll add you to the list.
+            </p>
+          </noscript>
+        </form>
+      )
+    }
+
+    <div data-reveal style="--reveal-delay:180ms">
+      <StoreBadges variant="cta" class="ct-badges" />
+    </div>
+
+    <p class="ct-fine" data-reveal style="--reveal-delay:220ms">
+      Free to start · Export your data anytime · Your data stays yours
+    </p>
+
+    <div class="ct-shelf" aria-hidden="true">
+      {
+        shelf.map((b, i) => (
+          <span
+            class={`ct-bar ${i >= 5 ? 'ct-bar-extra' : ''}`}
+            style={`height:${b.h}px;background:${b.c}`}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cb-cta {
+    position: relative;
+    background: var(--color-casebound-forest);
+    color: var(--color-casebound-ink-text);
+    padding: 104px 32px 96px;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .cb-cta-glow {
+    position: absolute;
+    top: -160px;
+    left: 50%;
+    translate: -50% 0;
+    width: 820px;
+    height: 520px;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(230, 200, 121, 0.14), transparent 66%);
+  }
+
+  .cb-cta-inner {
+    position: relative;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .ct-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(230, 200, 121, 0.15);
+    color: var(--color-casebound-gold-bright);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 999px;
+    margin: 0 0 24px;
+  }
+
+  .ct-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-casebound-gold-bright);
+    flex: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ct-dot {
+      animation: ct-pulse 2.2s ease-in-out infinite;
+    }
+  }
+
+  @keyframes ct-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(0.9);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  .ct-h2 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(38px, 5.2vw, 68px);
+    line-height: 1.03;
+    letter-spacing: -0.6px;
+    color: #fff;
+    margin: 0;
+  }
+
+  .ct-lede {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #b7d4c4;
+    max-width: 620px;
+    margin: 22px auto 0;
+  }
+
+  /* ---- notify form ---- */
+
+  .ct-form {
+    margin: 32px auto 0;
+    max-width: 520px;
+  }
+
+  .ct-fieldrow {
+    display: flex;
+    gap: 10px;
+  }
+
+  .ct-input {
+    flex: 1;
+    min-width: 0;
+    background: #16130f;
+    border: 1px solid #2f5744;
+    border-radius: 14px;
+    padding: 15px 18px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--color-casebound-ink-text);
+    min-height: 52px;
+  }
+
+  .ct-input::placeholder {
+    color: #7fa893;
+  }
+
+  .ct-input:focus-visible {
+    outline: 2px solid var(--color-casebound-gold-bright);
+    outline-offset: 2px;
+  }
+
+  .ct-input[aria-invalid='true'] {
+    border-color: #e0a09a;
+  }
+
+  .ct-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-casebound-gold-bright);
+    color: #2b2620;
+    border: 0;
+    border-radius: 14px;
+    padding: 15px 22px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 52px;
+    transition: background 0.2s ease;
+  }
+
+  .ct-submit:hover:not(:disabled) {
+    background: #f0d68e;
+  }
+
+  .ct-submit:disabled {
+    opacity: 0.65;
+    cursor: default;
+  }
+
+  /* Off-screen rather than display:none — some bots skip hidden inputs. */
+  .ct-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .ct-status {
+    font-size: 14px;
+    margin: 12px 0 0;
+    min-height: 20px;
+    color: #b7d4c4;
+  }
+
+  .ct-status[data-state='error'] {
+    color: #f0bdb6;
+  }
+
+  .ct-status[data-state='ok'] {
+    color: var(--color-casebound-gold-bright);
+  }
+
+  .ct-noscript {
+    font-size: 14px;
+    color: #b7d4c4;
+    margin: 12px 0 0;
+  }
+
+  .ct-noscript a {
+    color: var(--color-casebound-gold-bright);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .cb-cta-inner :global(.ct-badges) {
+    margin-top: 28px;
+  }
+
+  .ct-fine {
+    font-size: 13.5px;
+    color: #7fa893;
+    margin: 20px 0 0;
+  }
+
+  .ct-shelf {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 56px;
+  }
+
+  .ct-bar {
+    width: 34px;
+    border-radius: 3px;
+    flex: none;
+  }
+
+  @media (max-width: 1023px) {
+    .cb-cta {
+      padding: 72px 24px 64px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-cta {
+      padding: 56px 20px 52px;
+    }
+    .ct-fieldrow {
+      flex-direction: column;
+    }
+    .ct-submit {
+      justify-content: center;
+    }
+    /* Eight 34px bars overflow at 360px. */
+    .ct-bar {
+      width: 24px;
+    }
+    .ct-shelf {
+      gap: 7px;
+      margin-top: 40px;
+    }
+    .ct-bar-extra {
+      display: none;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ endpoint: NOTIFY_ENDPOINT, supportEmail: SUPPORT_EMAIL }}>
+  const form = document.getElementById('notify');
+  const status = document.getElementById('notify-status');
+
+  if (form && status) {
+    const input = form.querySelector('#notify-email');
+    const button = form.querySelector('.ct-submit');
+    const honeypot = form.querySelector('#notify-website');
+
+    const say = (msg, state) => {
+      status.textContent = msg;
+      status.setAttribute('data-state', state);
+    };
+
+    // When the endpoint is unreachable or erroring, hand over a mailto that
+    // pre-fills what they typed. Losing a sign-up to a backend outage is worse
+    // than the slightly clumsy handoff.
+    const fallbackToEmail = () => {
+      const addr = (input.value || '').trim();
+      status.innerHTML = '';
+      status.append('We couldn’t save that just now — ');
+      const a = document.createElement('a');
+      a.href =
+        'mailto:' + supportEmail +
+        '?subject=' + encodeURIComponent('Notify me about Casebound') +
+        '&body=' + encodeURIComponent('Please add ' + addr + ' to the launch list.');
+      a.textContent = 'email us instead';
+      a.style.color = '#E6C879';
+      status.append(a, ' and we’ll add you by hand.');
+      status.setAttribute('data-state', 'error');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = (input.value || '').trim();
+
+      // Mirrors the server rule; the server is still the authority.
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        input.setAttribute('aria-invalid', 'true');
+        say('That email address doesn’t look right.', 'error');
+        input.focus();
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+
+      button.disabled = true;
+      say('Adding you to the list…', 'pending');
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            website: honeypot ? honeypot.value : '',
+            source: 'casebound.co',
+          }),
+        });
+
+        if (res.ok) {
+          form.reset();
+          say('You’re on the list. We’ll email you the moment it lands.', 'ok');
+          // Nothing more to submit once they're on the list.
+          button.disabled = true;
+          input.disabled = true;
+          return;
+        }
+
+        if (res.status === 429) {
+          say('Too many sign-ups from here just now. Try again later.', 'error');
+        } else {
+          // Anything else is our problem, not something retrying fixes — give
+          // them a way through rather than an infinite "try again".
+          fallbackToEmail();
+        }
+      } catch {
+        fallbackToEmail();
+      }
+
+      button.disabled = false;
+    });
+  }
+</script>

@@ -1,0 +1,325 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Fixed site nav.
+ *
+ * The prototype is desktop-only; below 1024px the four section links collapse
+ * behind a hamburger while the "Get the app" pill stays visible, per the
+ * handoff's tablet spec.
+ */
+
+const links = [
+  { label: 'Features', href: '#formats' },
+  { label: 'Themes', href: '#themes' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'FAQ', href: '#faq' },
+];
+---
+
+<a href="#main" class="cb-skip">Skip to content</a>
+
+<nav id="cb-nav" class="cb-nav" aria-label="Main">
+  <a href="#top" class="cb-wordmark" aria-label="Casebound — back to top">
+    <span class="cb-mark" aria-hidden="true">C</span>
+    <span class="cb-name">Casebound</span>
+  </a>
+
+  <div class="cb-nav-right">
+    <ul class="cb-links">
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href}>{l.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href="#get" class="cb-cta">Get the app</a>
+
+    <button
+      type="button"
+      id="cb-menu-toggle"
+      class="cb-burger"
+      aria-expanded="false"
+      aria-controls="cb-mobile-menu"
+      aria-label="Open menu"
+    >
+      <Icon name="menu" size={22} stroke={2} />
+    </button>
+  </div>
+</nav>
+
+<div id="cb-mobile-menu" class="cb-mobile-menu" hidden>
+  <ul>
+    {
+      links.map((l) => (
+        <li>
+          <a href={l.href} data-menu-link>
+            {l.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .cb-skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--color-casebound-green);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 0 0 10px 0;
+    font-weight: 600;
+    font-size: 14.5px;
+    text-decoration: none;
+  }
+  .cb-skip:focus {
+    left: 0;
+  }
+
+  .cb-nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid transparent;
+    transition:
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      padding 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  .cb-nav.is-scrolled {
+    background: rgba(250, 246, 238, 0.85);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-color: var(--color-casebound-border);
+    box-shadow: 0 4px 20px rgba(43, 38, 32, 0.06);
+    padding: 12px 32px;
+  }
+
+  .cb-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+  }
+
+  .cb-mark {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--color-casebound-green);
+    color: var(--color-casebound-gold-wordmark);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .cb-name {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.2px;
+    color: var(--color-casebound-dark-green);
+  }
+
+  .cb-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .cb-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cb-links a {
+    display: inline-flex;
+    align-items: center;
+    /* 44px minimum tap target without shifting the visual baseline. */
+    min-height: 44px;
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--color-casebound-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .cb-links a:hover {
+    color: var(--color-casebound-dark-green);
+  }
+
+  .cb-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    background: var(--color-casebound-green);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(35, 74, 55, 0.25);
+    transition: background 0.2s ease;
+  }
+
+  .cb-cta:hover {
+    background: var(--color-casebound-dark-green);
+  }
+
+  .cb-burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-casebound-border);
+    border-radius: 12px;
+    background: var(--color-casebound-surface);
+    color: var(--color-casebound-text);
+    cursor: pointer;
+  }
+
+  .cb-mobile-menu {
+    position: fixed;
+    top: 72px;
+    left: 16px;
+    right: 16px;
+    z-index: 59;
+    background: var(--color-casebound-surface);
+    border: 1px solid var(--color-casebound-border);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px -30px rgba(43, 38, 32, 0.4);
+    padding: 8px;
+  }
+
+  .cb-mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cb-mobile-menu a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-casebound-text);
+    text-decoration: none;
+  }
+
+  .cb-mobile-menu a:hover {
+    background: var(--color-casebound-wallpaper);
+  }
+
+  @media (max-width: 1023px) {
+    .cb-nav {
+      padding: 14px 20px;
+    }
+    .cb-nav.is-scrolled {
+      padding: 10px 20px;
+    }
+    .cb-links {
+      display: none;
+    }
+    .cb-burger {
+      display: inline-flex;
+    }
+    .cb-nav-right {
+      gap: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-nav {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Sticky state. Fires once on init so a page loaded mid-scroll (a refresh on
+  // an anchor, or a browser restoring scroll position) starts styled correctly.
+  const nav = document.getElementById('cb-nav');
+  if (nav) {
+    let ticking = false;
+    const sync = () => {
+      nav.classList.toggle('is-scrolled', window.scrollY > 28);
+      ticking = false;
+    };
+    sync();
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(sync);
+      },
+      { passive: true },
+    );
+  }
+
+  // Mobile menu.
+  const toggle = document.getElementById('cb-menu-toggle');
+  const menu = document.getElementById('cb-mobile-menu');
+
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(menu.hidden === true);
+    });
+
+    // Close on selection, on Escape, and on any click outside the menu.
+    menu.querySelectorAll('[data-menu-link]').forEach((a) => {
+      a.addEventListener('click', () => setOpen(false));
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as Node;
+      if (menu.hidden) return;
+      if (menu.contains(target) || toggle.contains(target)) return;
+      setOpen(false);
+    });
+
+    // The menu only exists below 1024px; reopening the desktop layout while
+    // it is open would otherwise leave an orphaned panel floating.
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>

@@ -1,0 +1,105 @@
+---
+import Icon from './Icon.astro';
+import { LAUNCH } from '../config/site';
+
+/**
+ * Store badges, asymmetric by launch state.
+ *
+ * Android is live, so its badge is a real download link. iOS is still in
+ * review, so its badge routes to the notify-me field rather than a dead store
+ * page. Flip `LAUNCH.ios.live` in src/config/site.ts and this becomes a
+ * symmetric pair of download links with no other edits.
+ *
+ * These are deliberately NOT the official Apple/Google badge artwork. Both
+ * stores require their supplied assets be used unmodified, and we don't have
+ * them in-repo; a hand-drawn imitation of a trademarked badge is worse than
+ * none. Text buttons without store logos are the sanctioned alternative. See
+ * TODO_FOR_DREW.md to swap in the real artwork.
+ */
+
+interface Props {
+  variant?: 'hero' | 'cta';
+  class?: string;
+}
+
+const { variant = 'hero', class: className = '' } = Astro.props;
+
+const isCta = variant === 'cta';
+const bg = isCta ? '#16130F' : '#211D16';
+const labelColor = isCta ? '#8FBBA3' : '#B9AF9E';
+const pad = isCta ? '14px 22px' : '13px 20px';
+const minW = isCta ? 200 : 190;
+
+const badges = [
+  {
+    platform: 'ios' as const,
+    live: LAUNCH.ios.live,
+    href: LAUNCH.ios.live ? LAUNCH.ios.url : '#notify',
+    store: 'the App Store',
+    label: LAUNCH.ios.live ? 'Download on' : 'Coming soon to',
+    icon: LAUNCH.ios.live ? ('download' as const) : ('mail' as const),
+    aria: LAUNCH.ios.live
+      ? 'Download Casebound on the App Store'
+      : 'Casebound is coming soon to the App Store — get notified by email',
+  },
+  {
+    platform: 'android' as const,
+    live: LAUNCH.android.live,
+    href: LAUNCH.android.live ? LAUNCH.android.url : '#notify',
+    store: 'Google Play',
+    label: LAUNCH.android.live ? 'Get it on' : 'Coming soon to',
+    icon: LAUNCH.android.live ? ('download' as const) : ('mail' as const),
+    aria: LAUNCH.android.live
+      ? 'Get Casebound on Google Play'
+      : 'Casebound is coming soon to Google Play — get notified by email',
+  },
+];
+
+// Live stores first — the actionable badge should lead.
+badges.sort((a, b) => Number(b.live) - Number(a.live));
+---
+
+<div class={`flex flex-wrap gap-3 sm:gap-3.5 ${isCta ? 'justify-center' : ''} ${className}`}>
+  {
+    badges.map((b) => (
+      <a
+        href={b.href}
+        aria-label={b.aria}
+        {...(b.live
+          ? { target: '_blank', rel: 'noopener' }
+          : {})}
+        class="cb-badge group flex items-center gap-3 rounded-[14px] no-underline transition-transform duration-200 hover:-translate-y-0.5"
+        style={`background:${bg};padding:${pad};min-width:${minW}px;color:#F3EEE3`}
+      >
+        <Icon name={b.icon} size={24} stroke={1.9} class="shrink-0" style="color:#74B295" />
+        <span class="flex min-w-0 flex-col leading-tight">
+          <span class="text-[11px]" style={`color:${labelColor}`}>{b.label}</span>
+          <span class="font-serif text-[17px] font-semibold">{b.store}</span>
+        </span>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .cb-badge {
+    /* Comfortably above the 44px minimum tap target at both sizes. */
+    min-height: 56px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-badge {
+      transition: none;
+    }
+    .cb-badge:hover {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb-badge {
+      width: 100%;
+      min-width: 0 !important;
+    }
+  }
+</style>

@@ -1,0 +1,337 @@
+---
+import Phone from './Phone.astro';
+import Cover from './Cover.astro';
+import Icon from './Icon.astro';
+import { COVERS } from '../config/site';
+
+const rows = [
+  {
+    icon: 'book' as const,
+    bg: '#E3EDE5',
+    fg: '#234A37',
+    title: 'Print counts pages',
+    body: 'Physical and paperback measured where you actually are — page 213 of 662.',
+  },
+  {
+    icon: 'headphones' as const,
+    bg: '#F3E8CE',
+    fg: '#8A6A1F',
+    title: 'Audio counts hours',
+    body: 'Listening tracked in hours and minutes — 4h 12m of 27h — never faked into "pages."',
+  },
+  {
+    icon: 'tablet' as const,
+    bg: '#F2ECE0',
+    fg: '#6E6557',
+    title: 'Ebook counts percent',
+    body: 'Kindle and epub kept in locations or percent — the unit your reader speaks.',
+  },
+];
+---
+
+<section id="formats" class="cb-formats cb-section">
+  <div class="cb-split cb-formats-inner">
+    <div class="cb-split-phone cb-formats-phone" data-reveal>
+      <div class="cb-formats-glow" aria-hidden="true"></div>
+      <Phone
+        width={300}
+        screenHeight={600}
+        label="Casebound book detail screen for The Name of the Wind, showing two separate format records: a hardcover at page 213 of 662, and an audiobook at 4 hours 12 minutes of 27 hours."
+      >
+        <div class="fd">
+          <div class="fd-topbar">
+            <Icon name="chevronLeft" size={20} stroke={2} />
+            <span style="color:#8A6A1F"><Icon name="star" size={18} filled /></span>
+          </div>
+
+          <div class="fd-head">
+            <Cover cover={COVERS.nameOfTheWind} width={92} height={138} radius={6}
+              style="box-shadow:0 10px 22px rgba(35,74,55,.3)" />
+            <div class="fd-headtext">
+              <div class="fd-title">The Name of the Wind</div>
+              <div class="fd-author">Patrick Rothfuss</div>
+              <div class="fd-series">Kingkiller Chronicle · Book 1</div>
+              <div class="fd-stars">
+                {
+                  [0, 1, 2, 3, 4].map((i) => (
+                    <span style={`color:${i < 4 ? '#8A6A1F' : '#D9CFBC'}`}>
+                      <Icon name="star" size={12} filled />
+                    </span>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="fd-tags">
+            <span class="fd-tag" style="background:#E3EDE5;color:#234A37">Reading</span>
+            <span class="fd-tag" style="background:#F2ECE0;color:#6E6557">Owned</span>
+            <span class="fd-tag fd-tag-icon" style="background:#F2ECE0;color:#6E6557">
+              <Icon name="lock" size={11} stroke={2.4} />Private
+            </span>
+          </div>
+
+          <div class="fd-label">Formats</div>
+
+          <div class="fd-card">
+            <div class="fd-cardhead">
+              <span class="fd-cardname"><Icon name="book" size={14} stroke={2} />Hardcover</span>
+              <span class="fd-cardval tabular">213 / 662 pages</span>
+            </div>
+            <div class="fd-track"><span class="fd-fill" style="width:32%"></span></div>
+          </div>
+
+          <div class="fd-card">
+            <div class="fd-cardhead">
+              <span class="fd-cardname"><Icon name="headphones" size={14} stroke={2} />Audiobook</span>
+              <span class="fd-cardval tabular">4h 12m / 27h</span>
+            </div>
+            <div class="fd-track"><span class="fd-fill" style="width:16%"></span></div>
+          </div>
+
+          <div class="fd-cta">
+            <Icon name="play" size={14} filled />Start reading session
+          </div>
+        </div>
+      </Phone>
+    </div>
+
+    <div class="cb-split-copy">
+      <p class="cb-eyebrow" data-reveal>One book · Every format</p>
+      <h2 class="cb-h2" data-reveal style="--reveal-delay:60ms">
+        Own the hardcover.<br />Loved the audiobook.<br />Still one book.
+      </h2>
+      <p class="cb-lede" data-reveal style="--reveal-delay:100ms">
+        One library entry, a separate record for every format you own — each
+        tracked in its own honest unit. No cross-unit fudging, no
+        double-counting a book you read twice.
+      </p>
+
+      <ul class="fm-list">
+        {
+          rows.map((r, i) => (
+            <li class="fm-item" data-reveal style={`--reveal-delay:${140 + i * 60}ms`}>
+              <span class="fm-tile" style={`background:${r.bg};color:${r.fg}`}>
+                <Icon name={r.icon} size={21} stroke={1.9} />
+              </span>
+              <div>
+                <h3 class="fm-title">{r.title}</h3>
+                <p class="fm-body">{r.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cb-formats {
+    background: var(--color-casebound-surface);
+    border-top: 1px solid var(--color-casebound-border);
+  }
+
+  .cb-formats-inner {
+    max-width: 1180px;
+    grid-template-columns: 0.92fr 1.08fr;
+    gap: 72px;
+  }
+
+  .cb-formats-phone {
+    position: relative;
+  }
+
+  .cb-formats-glow {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    translate: -50% 0;
+    width: 340px;
+    height: 340px;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(46, 93, 69, 0.1), transparent 70%);
+  }
+
+  /* ---- book detail screen ---- */
+
+  .fd {
+    padding: 16px 18px;
+    height: 100%;
+  }
+
+  .fd-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #6e6557;
+    margin-bottom: 14px;
+  }
+
+  .fd-head {
+    display: flex;
+    gap: 14px;
+  }
+
+  .fd-headtext {
+    min-width: 0;
+    padding-top: 4px;
+  }
+
+  .fd-title {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 600;
+    color: #2b2620;
+    line-height: 1.18;
+  }
+
+  .fd-author {
+    font-size: 13px;
+    color: #6e6557;
+    margin-top: 4px;
+  }
+
+  .fd-series {
+    font-size: 12px;
+    color: #a39a8a;
+    margin-top: 3px;
+  }
+
+  .fd-stars {
+    display: flex;
+    gap: 2px;
+    margin-top: 8px;
+  }
+
+  .fd-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 16px 0 18px;
+  }
+
+  .fd-tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 9px;
+    border-radius: 7px;
+  }
+
+  .fd-tag-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .fd-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #a39a8a;
+    margin-bottom: 9px;
+  }
+
+  .fd-card {
+    background: #fff;
+    border: 1px solid #e7dfd0;
+    border-radius: 14px;
+    padding: 13px 14px;
+    margin-bottom: 10px;
+  }
+
+  .fd-cardhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .fd-cardname {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #2b2620;
+  }
+
+  .fd-cardval {
+    font-size: 12px;
+    color: #6e6557;
+    white-space: nowrap;
+  }
+
+  .fd-track {
+    height: 6px;
+    border-radius: 999px;
+    background: #f2ece0;
+    overflow: hidden;
+  }
+
+  .fd-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: #2e5d45;
+  }
+
+  .fd-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #2e5d45;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 15px;
+    border-radius: 13px;
+    margin-top: 16px;
+  }
+
+  /* ---- copy column ---- */
+
+  .fm-list {
+    list-style: none;
+    margin: 34px 0 0;
+    padding: 0;
+  }
+
+  .fm-item {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--color-casebound-border);
+  }
+
+  .fm-item:last-child {
+    border-bottom: 1px solid var(--color-casebound-border);
+  }
+
+  .fm-tile {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex: none;
+  }
+
+  .fm-title {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 5px;
+  }
+
+  .fm-body {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-casebound-muted);
+    margin: 0;
+  }
+</style>
