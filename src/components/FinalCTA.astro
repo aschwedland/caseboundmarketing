@@ -12,13 +12,13 @@ import {
 /**
  * COPY CORRECTIONS (see CONTENT-CHANGES.md):
  *
- * - The pill read "Coming soon to iOS & Android". Android shipped, so the pill
- *   and lede are now generated from LAUNCH.
+ * - The pill read "Coming soon to iOS & Android". Both apps have shipped; the
+ *   pill and lede are generated from LAUNCH.
  * - The fine print read "No account required". Casebound requires an account;
  *   replaced with a claim that is true.
  *
  * The design promised an email notification with no field to type into. This
- * adds the field. It posts to booktrackerapi's unauthenticated /notify
+ * adds the field, which only renders while a store is not yet live. It posts to booktrackerapi's unauthenticated /notify
  * endpoint, which stores the address and emails support@ — see
  * booktrackerapi/app/notify.py.
  */

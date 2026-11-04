@@ -41,7 +41,7 @@
 
 ## Launch day
 
-- [ ] **Flip iOS live.** Set `LAUNCH.ios.live = true` in `src/config/site.ts`.
+- [x] **Flip iOS live.** Set `LAUNCH.ios.live = true` in `src/config/site.ts`.
       That's the whole change — both store badges, the CTA pill, the hero fine
       print, the FAQ answer and the `SoftwareApplication` structured data all
       read from it. The App Store URL (id `6778136030`) is already wired.

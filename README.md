@@ -31,9 +31,9 @@ Cloudflare Pages:
 ## Two files to read before changing anything
 
 - **`src/config/site.ts`** — launch state, store URLs, the waitlist endpoint,
-  and the book-cover registry. Setting `LAUNCH.ios.live = true` is the entire
-  launch-day change: both store badges, the CTA pill, the hero fine print, the
-  FAQ answer and the structured data all read from it.
+  and the book-cover registry. iOS and Android are both live; both store badges,
+  the CTA pill, the hero fine print, the FAQ answer and the structured data all
+  read from `LAUNCH`.
 - **`CONTENT-CHANGES.md`** — every place the copy departs from the approved
   design, and why. Four of them are corrections to claims that contradict the
   shipping app.
@@ -68,7 +68,7 @@ src/
 │   ├── WhoItsFor.astro       # #who
 │   ├── Pricing.astro         # #pricing
 │   ├── FAQ.astro             # #faq
-│   ├── FinalCTA.astro        # #get        — waitlist form
+│   ├── FinalCTA.astro        # #get        — store badges (waitlist form while a store isn't live)
 │   ├── Footer.astro
 │   ├── Header.astro          # wordmark only, prose pages
 │   ├── Phone.astro           # mockup shell: bezel, scaling, role="img"
@@ -114,7 +114,7 @@ rotation while translating.
 
 ## Waitlist form
 
-`#get` posts to `POST /notify` on
+Hidden while both stores are live (`BOTH_LIVE`). When rendered, `#get` posts to `POST /notify` on
 [booktrackerapi](https://github.com/aschwedland/booktrackerapi)
 (`app/notify.py`), which stores the address in Supabase `waitlist_signups` and
 emails the support inbox. The table is the mailing list; the email is just

@@ -38,11 +38,16 @@ const {
  * SoftwareApplication describes the product itself, so it belongs on every
  * page. `operatingSystem` tracks the real launch state — it lists only stores
  * the app can actually be downloaded from, which keeps the structured data
- * honest while iOS is still in review.
+ * honest if a store listing is ever unavailable.
  */
 const platforms = [
   LAUNCH.android.live ? 'Android' : null,
   LAUNCH.ios.live ? 'iOS' : null,
+].filter(Boolean);
+
+const downloadUrls = [
+  LAUNCH.ios.live ? LAUNCH.ios.url : null,
+  LAUNCH.android.live ? LAUNCH.android.url : null,
 ].filter(Boolean);
 
 const softwareApplication = {
@@ -55,7 +60,7 @@ const softwareApplication = {
   description,
   url: 'https://casebound.co/',
   image: ogImage,
-  ...(LAUNCH.android.live ? { downloadUrl: LAUNCH.android.url } : {}),
+  ...(downloadUrls.length ? { downloadUrl: downloadUrls } : {}),
   offers: [
     {
       '@type': 'Offer',

@@ -183,6 +183,10 @@ from `LAUNCH` in `src/config/site.ts`:
 
 **Launch day is one line:** set `LAUNCH.ios.live = true`.
 
+**Update, 2026-11-04: iOS is live and the flag is flipped.** Both badges are
+download links, the pill reads *"Out now on iOS & Android"*, the hero fine print
+reads *"Free to start · iOS & Android"*, and the notify-me form no longer renders.
+
 ### Judgment calls I did *not* change
 
 "Not built for: people who want an algorithm to decide what they read next"

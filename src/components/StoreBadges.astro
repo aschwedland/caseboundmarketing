@@ -5,10 +5,10 @@ import { LAUNCH } from '../config/site';
 /**
  * Store badges, asymmetric by launch state.
  *
- * Android is live, so its badge is a real download link. iOS is still in
- * review, so its badge routes to the notify-me field rather than a dead store
- * page. Flip `LAUNCH.ios.live` in src/config/site.ts and this becomes a
- * symmetric pair of download links with no other edits.
+ * A live store gets a real download link. A store that isn't live routes to
+ * the notify-me field rather than a dead store page. Both are live today, so
+ * this renders a symmetric pair of download links; the state comes from
+ * `LAUNCH` in src/config/site.ts.
  *
  * These are deliberately NOT the official Apple/Google badge artwork. Both
  * stores require their supplied assets be used unmodified, and we don't have

@@ -14,12 +14,12 @@ export interface PlatformStatus {
 }
 
 /**
- * Android shipped first; iOS is still in review. Set `ios.live = true` on the
- * day the App Store listing goes public and every string on the page follows.
+ * Both stores are live. Android shipped first and iOS followed; the flags stay
+ * so that a store being pulled, or a future platform, needs only this one edit.
  */
 export const LAUNCH: { ios: PlatformStatus; android: PlatformStatus } = {
   ios: {
-    live: false,
+    live: true,
     // ASC app id 6778136030, from booktracker/eas.json.
     url: 'https://apps.apple.com/app/id6778136030',
   },

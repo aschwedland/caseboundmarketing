@@ -138,8 +138,7 @@ export const FAQS: FaqItem[] = [
     origin: 'design',
     q: 'Where can I get it?',
     a: launchAnswer(),
-    // REWRITTEN for the split launch: Android is live, iOS is not. The answer
-    // is generated from LAUNCH in src/config/site.ts, so it stays correct when
-    // iOS flips.
+    // REWRITTEN for the split launch, and now reads as available on both stores.
+    // The answer is generated from LAUNCH in src/config/site.ts.
   },
 ];
